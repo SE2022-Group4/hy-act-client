@@ -53,7 +53,14 @@
               (programItem.target_grade.includes(searchTargetGrade[0]) || searchTargetGrade === '전체') &&
               (programItem.target_gender.includes(searchTargetGender) || searchTargetGender === '전체') &&
               (programItem.target_major.includes(searchTargetMajor) || searchTargetMajor === '전체')"
-      :program="programItem" style="margin-bottom: 10px"/>
+      :program="programItem" style="margin-bottom: 10px"
+      @dialog-open="openDialog"
+    />
+    <div>
+      <q-dialog v-model="dialogOpened" class="full-width">
+        <ProgramInfoDialog v-model="dialogOpened" :program="programItem"/>
+      </q-dialog>
+    </div>
   </q-page>
 </template>
 <style scoped>
@@ -67,10 +74,12 @@ div .items-center {
 import {defineComponent, ref} from 'vue';
 import ProgramCard from 'components/ProgramCard.vue';
 import {useProgramStore} from 'stores/program.store';
+import ProgramInfoDialog from 'components/ProgramInfoDialog.vue';
 
 export default defineComponent({
   name: 'IndexPage',
-  components: { ProgramCard },
+  components: { ProgramInfoDialog, ProgramCard },
+  inheritAttrs: false,
   setup () {
     const programStore = useProgramStore();
     programStore.fetchProgramList();
@@ -78,7 +87,16 @@ export default defineComponent({
     targetMajorList.unshift('전체')
     const targetGenderList = ['전체', '남성', '여성']
     const targetGradeList = ['전체', '1학년', '2학년', '3학년', '4학년 이상'];
+    const dialogOpened = ref(false);
+    const programItem = ref({});
+    function openDialog (program: object) {
+      dialogOpened.value = true;
+      programItem.value = program;
+    }
     return {
+      programItem,
+      openDialog,
+      dialogOpened,
       programItemList: programStore.programList,
       targetMajorList,
       targetGenderList,

@@ -5,7 +5,7 @@
         <div class="text-h6 col-11" style="text-align: center">
           {{program.title}}
         </div>
-        <q-btn icon="mdi-magnify" style="background-color: #343a40; color: #E2E6EA"></q-btn>
+        <q-btn icon="mdi-magnify" style="background-color: #343a40; color: #E2E6EA" @click="dialogOpen" />
       </div>
     </q-card-section>
     <q-separator />
@@ -59,17 +59,21 @@
 <script>
 export default {
   name: 'ProgramCard',
+  emits: ['dialog-open'],
   props: {
     program: {
       type: Object,
       required: true
     }
   },
-  setup(props) {
+  setup(props, {emit}) {
     const zero = num => num < 10 && num >= 0 ? '0' + num : num;
     const koreanDate = date => `${date.getFullYear()}년 ${zero(date.getMonth() + 1)}월 ${zero(date.getDate())}일 ${zero(date.getHours())}:${zero(date.getMinutes())}`;
     const targetDate = `${koreanDate(props.program.start_date)} ~ ${koreanDate(props.program.end_date)}`
-    return {targetDate}
+    function dialogOpen() {
+      emit('dialog-open', props.program);
+    }
+    return {targetDate, dialogOpen}
   }
 }
 </script>
