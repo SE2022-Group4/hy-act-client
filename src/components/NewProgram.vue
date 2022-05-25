@@ -6,74 +6,95 @@
       style="height: 47em"
       class="shadow-2"
     >
+      <div
+        class="text-h4 text-weight-bold"
+        style="text-align: center; margin: 15px"
+      >
+        신규 비교과 프로그램 등록
+      </div>
+
+      <q-space />
+
       <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
         <div class="row">
-          <div class="col">
+          <div class="col-5">
             <q-img
+              class="q-ml-lg"
               src="https://placeimg.com/500/300/nature"
-              style="margin: 5px; fit: fill"
+              style="max-width: 90%"
             />
           </div>
-          <div class="col-6">
-            <q-input
-              filled
-              v-model="name"
-              label="강의명"
-              lazy-rules
-              :rules="[
-                (val) => (val && val.length > 0) || 'Please type something',
-              ]"
-            />
-            <q-btn-dropdown color="dark" label="모집대상">
-              <q-list>
-                <template v-for="identity in identitys" :key="identity.id">
-                  <q-item clickable v-close-popup @click="onItemClick">
-                    <q-item-section>
-                      <q-item-label>{{ identity.name }}</q-item-label>
-                    </q-item-section>
-                  </q-item>
-                </template>
-              </q-list>
-            </q-btn-dropdown>
+          <div class="col-7">
+            <div class="row">
+              <div
+                class="text-h6 text-weight-bold col-2 vertical-middle q-pr-xs q-mb-md"
+                style="text-align: right"
+              >
+                강의명 :
+              </div>
+              <div class="col-9">
+                <q-input dense v-model="text" />
+              </div>
 
-            <q-btn-dropdown color="dark" label="대상 학년">
-              <q-list>
-                <template v-for="grade in grades" :key="grade.id">
-                  <q-item clickable v-close-popup @click="onItemClick">
-                    <q-item-section>
-                      <q-item-label>{{ grade.name }}</q-item-label>
-                    </q-item-section>
-                  </q-item>
-                </template>
-              </q-list>
-            </q-btn-dropdown>
+              <div class="q-mb-xs col-11">
+                <q-select
+                  dense
+                  outlined
+                  v-model="identity"
+                  :options="identitys"
+                  option-value="id"
+                  option-label="name"
+                  label="모집 대상"
+                  emit-value
+                  map-options
+                  multiple
+                />
+              </div>
 
-            <q-btn-dropdown color="dark" label="대상 성별">
-              <q-list>
-                <template v-for="gender in genders" :key="gender.id">
-                  <q-item clickable v-close-popup @click="onItemClick">
-                    <q-item-section>
-                      <q-item-label>{{ gender.name }}</q-item-label>
-                    </q-item-section>
-                  </q-item>
-                </template>
-              </q-list>
-            </q-btn-dropdown>
+              <div class="q-mb-xs col-11">
+                <q-select
+                  dense
+                  outlined
+                  v-model="grade"
+                  :options="grades"
+                  option-value="id"
+                  option-label="name"
+                  label="대상 학년"
+                  emit-value
+                  map-options
+                  multiple
+                />
+              </div>
 
-            <q-btn-dropdown color="dark" label="대상 학과" id="majorList">
-              <q-list>
-                <template
-                  v-for="majorSelect in majorSelects"
-                  :key="majorSelect.id"
-                >
-                  <q-item clickable v-close-popup @click="onItemClick">
-                    <q-item-section>
-                      <q-item-label>{{ majorSelect.name }}</q-item-label>
-                    </q-item-section>
-                  </q-item>
-                </template>
-              </q-list>
-            </q-btn-dropdown>
+              <div class="q-mb-xs col-11">
+                <q-select
+                  dense
+                  outlined
+                  v-model="gender"
+                  :options="genders"
+                  option-value="id"
+                  option-label="name"
+                  label="대상 성별"
+                  emit-value
+                  map-options
+                />
+              </div>
+
+              <div class="q-mb-xs col-11">
+                <q-select
+                  dense
+                  outlined
+                  v-model="majorSelect"
+                  :options="majorSelects"
+                  option-value="id"
+                  option-label="name"
+                  label="대상 학과"
+                  emit-value
+                  map-options
+                  multiple
+                />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -139,8 +160,13 @@ import { useQuasar } from 'quasar';
 import { ref } from 'vue';
 
 export default {
-  data: function () {
+  data() {
     return {
+      identity: null,
+      grade: null,
+      gender: null,
+      majorSelect: null,
+      placeSelect: null,
       identitys: [
         { name: '무관' },
         { name: '재학생' },
@@ -289,7 +315,7 @@ export default {
       onItemClick() {
         console.log('Clicked on an Item');
       },
-      model: ref({ from: '2020/07/08', to: '2020/07/17' }),
+      dateModel: ref({ from: '2020/07/08', to: '2020/07/17' }),
     };
   },
 };
