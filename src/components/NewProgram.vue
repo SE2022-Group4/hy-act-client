@@ -3,40 +3,48 @@
     <q-layout
       view="lHh 1pr lFf"
       container
-      style="height: 47em"
+      style="height: 50em"
       class="shadow-2"
     >
+      <div class="flex-break q-py-md"></div>
       <div
-        class="text-h4 text-weight-bold"
+        class="text-h4 text-weight-bold q-mb-xl"
         style="text-align: center; margin: 15px"
       >
         신규 비교과 프로그램 등록
       </div>
 
-      <q-space />
+      <div class="flex-break q-py-md"></div>
 
       <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
         <div class="row">
-          <div class="col-5">
-            <q-img
-              class="q-ml-lg"
-              src="https://placeimg.com/500/300/nature"
-              style="max-width: 90%"
+          <div class="col-1 margin-auto">
+            <q-uploader
+              url="http://localhost:4444/upload"
+              color="teal"
+              filled
+              style="max-width: 400px"
             />
           </div>
-          <div class="col-7">
+          <div class="col-6 margin-auto">
             <div class="row">
               <div
-                class="text-h6 text-weight-bold col-2 vertical-middle q-pr-xs q-mb-md"
+                class="text-h6 text-weight-bold col-2 q-mt-xs q-pr-xs q-mb-md"
                 style="text-align: right"
               >
                 강의명 :
               </div>
               <div class="col-9">
-                <q-input dense v-model="text" />
+                <q-input outlined dense v-model="text" />
               </div>
 
-              <div class="q-mb-xs col-11">
+              <div
+                class="text-h6 text-weight-bold col-2 q-mt-xs q-pr-xs q-mb-md"
+                style="text-align: right"
+              >
+                모집 대상 :
+              </div>
+              <div class="q-mb-xs col-9">
                 <q-select
                   dense
                   outlined
@@ -51,7 +59,13 @@
                 />
               </div>
 
-              <div class="q-mb-xs col-11">
+              <div
+                class="text-h6 text-weight-bold col-2 q-mt-xs q-pr-xs q-mb-md"
+                style="text-align: right"
+              >
+                대상 학년 :
+              </div>
+              <div class="q-mb-xs col-9">
                 <q-select
                   dense
                   outlined
@@ -66,7 +80,13 @@
                 />
               </div>
 
-              <div class="q-mb-xs col-11">
+              <div
+                class="text-h6 text-weight-bold col-2 q-mt-xs q-pr-xs q-mb-md"
+                style="text-align: right"
+              >
+                대상 성별 :
+              </div>
+              <div class="q-mb-xs col-9">
                 <q-select
                   dense
                   outlined
@@ -80,7 +100,13 @@
                 />
               </div>
 
-              <div class="q-mb-xs col-11">
+              <div
+                class="text-h6 text-weight-bold col-2 q-mt-xs q-pr-xs q-mb-md"
+                style="text-align: right"
+              >
+                대상 학과 :
+              </div>
+              <div class="q-mb-xs col-9">
                 <q-select
                   dense
                   outlined
@@ -98,57 +124,133 @@
           </div>
         </div>
 
-        <q-input v-model="date" filled type="date" hint="Native date" />
-        <q-input v-model="time" filled type="time" hint="Native time" />
+        <div class="row">
+          <div
+            class="text-h6 text-weight-bold col-2 vertical-middle q-pr-xs q-mb-md q-mt-sm"
+            style="text-align: right"
+          >
+            진행 일시 :
+          </div>
+          <div class="col-2 q-mr-xs">
+            <q-input dense v-model="date" filled type="date" name="시작 날짜" />
+          </div>
+          <div class="col-2 q-mr-md">
+            <q-input dense v-model="time" filled type="time" name="시작 시간" />
+          </div>
+          <div class="col-2 q-mr-xs">
+            <q-input dense v-model="date" filled type="date" name="종료 날짜" />
+          </div>
+          <div class="col-2">
+            <q-input dense v-model="time" filled type="time" name="종료 시간" />
+          </div>
+        </div>
 
-        <q-input v-model="date" filled type="date" hint="Native date" />
-        <q-input v-model="time" filled type="time" hint="Native time" />
-
-        <q-btn-dropdown color="dark" label="진행 장소" id="majorList">
-          <q-list>
-            <template v-for="placeSelect in placeSelects" :key="placeSelect.id">
-              <q-item clickable v-close-popup @click="onItemClick">
-                <q-item-section>
-                  <q-item-label>{{ placeSelect.name }}</q-item-label>
-                </q-item-section>
-              </q-item>
-            </template>
-          </q-list>
-        </q-btn-dropdown>
-
-        <q-input filled v-model="text" label="세부 장소" />
-        <q-input filled v-model="text" label="진행 개요" />
-
-        <q-input filled v-model="text" label="강사/주관기관 정보 등록" />
+        <div class="row">
+          <div
+            class="text-h6 text-weight-bold col-2 vertical-middle q-pr-xs q-mb-md q-mt-sm"
+            style="text-align: right"
+          >
+            진행 일시 :
+          </div>
+          <div class="col-5 q-mr-md">
+            <q-select
+              dense
+              outlined
+              v-model="placeSelect"
+              :options="placeSelects"
+              option-value="id"
+              option-label="name"
+              label="진행 장소"
+              emit-value
+              map-options
+              multiple
+            />
+          </div>
+          <div class="col-3">
+            <q-input outlined dense v-model="text" label="상세 장소" />
+          </div>
+        </div>
+        <div class="row">
+          <div
+            class="text-h6 text-weight-bold col-2 vertical-middle q-pr-xs q-mb-md q-mt-sm"
+            style="text-align: right"
+          >
+            진행 개요 :
+          </div>
+          <div class="col-8 q-ml-md" style="max-height: 300px">
+            <q-input outlined v-model="model" />
+          </div>
+        </div>
+        <div
+          class="text-h6 text-weight-bold col-2 q-mb-md"
+          style="text-align: center"
+        >
+          상세 정보 등록
+        </div>
+        <div class="row">
+          <div class="col-8 margin-auto" style="max-height: 300px">
+            <q-input filled v-model="model" type="textarea" />
+          </div>
+        </div>
 
         <q-separator color="black" inset />
 
-        <q-input filled v-model="text" label="강사/주관기관명" />
-        <q-input filled v-model="text" label="강사/주관기관 Email" />
-        <q-input filled v-model="text" label="강사/주관기관 전화번호" />
-        <q-input filled v-model="text" label="강사/주관기관 신분" />
+        <div
+          class="text-h6 text-weight-bold col-2 vertical-middle q-pr-xs q-mb-md"
+          style="text-align: center"
+        >
+          강사/주관기관 정보 등록
+        </div>
+        <div class="row">
+          <div class="col-2"></div>
+          <div class="col-4 q-mr-xs" style="max-height: 300px">
+            <q-input filled v-model="text" label="강사/주관기관명" />
+          </div>
+          <div class="col-4" style="max-height: 300px">
+            <q-input filled v-model="text" label="강사/주관기관 Email" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-2"></div>
+          <div class="col-4 q-mr-xs" style="max-height: 300px">
+            <q-input filled v-model="text" label="강사/주관기관 전화번호" />
+          </div>
+          <div class="col-4" style="max-height: 300px">
+            <q-input filled v-model="text" label="강사/주관기관 신분" />
+          </div>
+        </div>
 
         <q-separator color="black" inset />
 
-        <q-input
-          v-model.number="model"
-          type="number"
-          filled
-          hint="참여 포인트"
-          style="max-width: 200px"
-        />
+        <div class="row margin-auto">
+          <div
+            class="text-h6 text-weight-bold col-5 q-pr-xs q-mb-md q-mt-sm"
+            style="text-align: right"
+          >
+            참여 포인트 :
+          </div>
+          <div class="col-7" style="max-height: 300px; text-align: left">
+            <q-input
+              dense
+              v-model.number="model"
+              type="number"
+              filled
+              style="max-width: 200px"
+            />
+          </div>
+        </div>
 
-        <q-toggle v-model="accept" label="I accept the license and terms" />
-
-        <div>
-          <q-btn label="Submit" type="submit" color="primary" />
-          <q-btn
-            label="Reset"
-            type="reset"
-            color="primary"
-            flat
-            class="q-ml-sm"
-          />
+        <div class="row">
+          <div class="col-5 margin-auto">
+            <q-btn
+              class="q-ma-xl"
+              padding="xs 100px"
+              size="25px"
+              label="등록하기"
+              type="submit"
+              color="dark"
+            />
+          </div>
         </div>
       </q-form>
     </q-layout>
@@ -320,3 +422,10 @@ export default {
   },
 };
 </script>
+
+<style>
+.margin-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
