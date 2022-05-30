@@ -55,13 +55,19 @@
               (programItem.target_major.includes(searchTargetMajor) || searchTargetMajor === '전체')"
       :program="programItem" style="margin-bottom: 10px"
       @dialog-open="openDialog"
+      @info-open="openInfoDialog"
     />
     <div>
       <q-dialog v-model="dialogOpened" class="full-width">
-        <ProgramInfoDialog v-model="dialogOpened" :program="programItem"/>
+        <ProgramApplyDialog :program="programItem"/>
       </q-dialog>
     </div>
   </q-page>
+  <div>
+    <q-dialog v-model="infoDialogOpened" class="full-width">
+      <ProgramInfoDialog :program="programItem"/>
+    </q-dialog>
+  </div>
 </template>
 <style scoped>
 div .items-center {
@@ -75,10 +81,11 @@ import {defineComponent, ref} from 'vue';
 import ProgramCard from 'components/ProgramCard.vue';
 import {useProgramStore} from 'stores/program.store';
 import ProgramInfoDialog from 'components/ProgramInfoDialog.vue';
+import ProgramApplyDialog from 'components/ProgramApplyDialog.vue';
 
 export default defineComponent({
   name: 'IndexPage',
-  components: { ProgramInfoDialog, ProgramCard },
+  components: { ProgramInfoDialog, ProgramCard, ProgramApplyDialog },
   inheritAttrs: false,
   setup () {
     const programStore = useProgramStore();
@@ -88,15 +95,23 @@ export default defineComponent({
     const targetGenderList = ['전체', '남성', '여성']
     const targetGradeList = ['전체', '1학년', '2학년', '3학년', '4학년 이상'];
     const dialogOpened = ref(false);
+    const infoDialogOpened = ref(false);
     const programItem = ref({});
     function openDialog (program: object) {
       dialogOpened.value = true;
+      programItem.value = program;
+    }
+
+    function openInfoDialog (program: object) {
+      infoDialogOpened.value = true;
       programItem.value = program;
     }
     return {
       programItem,
       openDialog,
       dialogOpened,
+      openInfoDialog,
+      infoDialogOpened,
       programItemList: programStore.programList,
       targetMajorList,
       targetGenderList,

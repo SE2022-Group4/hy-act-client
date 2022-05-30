@@ -5,7 +5,7 @@
         <div class="text-h6 col-11" style="text-align: center">
           {{program.title}}
         </div>
-        <q-btn icon="mdi-magnify" style="background-color: #343a40; color: #E2E6EA" @click="dialogOpen" />
+        <q-btn icon="mdi-magnify" style="background-color: #343a40; color: #E2E6EA" @click="infoDialogOpen"/>
       </div>
     </q-card-section>
     <q-separator />
@@ -45,7 +45,7 @@
           </q-item>
           <q-item>
             <q-item-section class="col-12">
-              <q-btn rounded style="background-color: #5B5D60; color: white; padding: 15px">
+              <q-btn rounded style="background-color: #5B5D60; color: white; padding: 15px" @click="dialogOpen">
                 신청하기
               </q-btn>
             </q-item-section>
@@ -59,7 +59,7 @@
 <script>
 export default {
   name: 'ProgramCard',
-  emits: ['dialog-open'],
+  emits: ['dialog-open', 'info-open'],
   props: {
     program: {
       type: Object,
@@ -73,7 +73,10 @@ export default {
     function dialogOpen() {
       emit('dialog-open', props.program);
     }
-    return {targetDate, dialogOpen}
+    function infoDialogOpen() {
+      emit('info-open', props.program);
+    }
+    return {targetDate, dialogOpen, infoDialogOpen}
   }
 }
 </script>
