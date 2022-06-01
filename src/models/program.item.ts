@@ -12,4 +12,8 @@ export interface ProgramItem {
   place: string;
   current_people: number;
   max_people: number;
+  description: string;
+  teacher_name: string;
+  teacher_email: string;
+  teacher_phone: string;
 }
