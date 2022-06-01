@@ -14,6 +14,7 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/IndexPage.vue') },
+      { path: '/mileage', component: () => import('pages/MileagePage.vue') },
     ],
   },
 
