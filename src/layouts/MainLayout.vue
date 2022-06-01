@@ -17,7 +17,6 @@
           <q-item>학사팀(031-400-2222)</q-item>
           <q-item>전산실(031-400-3333)</q-item>
         </q-list>
-
         <div id="language-dialog" style="background-color: #23272B">
           <q-slide-transition>
             <q-list
@@ -46,6 +45,7 @@
         <q-item class="text-weight-bold items-center" style="color: #91979b" >하냥이 학생</q-item>
         <q-item class="items-center">student@hanyang.ac.kr</q-item>
       </q-list>
+
 
       <q-list>
         <q-item class="items-center">
