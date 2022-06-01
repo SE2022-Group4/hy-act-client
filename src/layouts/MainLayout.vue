@@ -87,7 +87,9 @@
           icon="mdi-logout"
           label="로그아웃"
           flat
-          style="width: 100%; color: #91979b" />
+          style="width: 100%; color: #91979b"
+          @click="logout" />
+        />
       </div>
     </q-drawer>
     <q-page-container>
@@ -137,9 +139,14 @@ export default defineComponent({
       group.value = '상점 관리자'
     }
 
+    function logout() {
+      userStore.logout()
+    }
+
     return {
       user,
       group,
+      logout,
       languageListOpened,
       openLanguageList() {
         languageListOpened.value = !languageListOpened.value
