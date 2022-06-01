@@ -5,6 +5,8 @@ export interface ProgramItem {
   target_gender: string;
   target_major: string;
   mileage: number;
+  apply_start_date: Date;
+  apply_end_date: Date;
   start_date: Date;
   end_date: Date;
   place: string;
