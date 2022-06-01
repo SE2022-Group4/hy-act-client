@@ -220,6 +220,7 @@
 <script>
 import { useQuasar } from 'quasar';
 import {ref} from 'vue';
+import {api} from "../boot/axios";
 
 export default {
   name: 'CreateProgramPage',
@@ -443,11 +444,38 @@ export default {
           });
         }
 
-        $q.notify({
-          color: 'green-5',
-          textColor: 'white',
-          message: '정상적으로 저장되었습니다.',
-        });
+        const data = {
+          name: name.value,
+          group: group.value,
+          grade: grade.value,
+          gender: gender.value,
+          major: major.value,
+          startDate: startDate.value,
+          startTime: startTime.value,
+          endDate: endDate.value,
+          endTime: endTime.value,
+          applyStartDate: applyStartDate.value,
+          applyStartTime: applyStartTime.value,
+          applyEndDate: applyEndDate.value,
+          applyEndTime: applyEndTime.value,
+          place: place.value,
+          description: description.value,
+          teacherName: teacher.value,
+          teacherEmail: teacherEmail.value,
+          teacherPhone: teacherPhone.value,
+          teacherGroup: teacherGroup.value,
+          mileage: mileage.value
+        };
+
+        api.post("/program", JSON.stringify(data)).then(
+          () => {
+            $q.notify({
+              color: 'green-5',
+              textColor: 'white',
+              message: '정상적으로 저장되었습니다.',
+            });
+          }
+        )
       },
 
       onReset() {
