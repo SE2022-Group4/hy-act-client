@@ -47,6 +47,7 @@ module.exports = configure(function (/* ctx */) {
     framework: {
       config: {},
       plugins: [
+        'Dialog'
         'Notify',
       ]
     },
