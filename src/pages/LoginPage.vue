@@ -60,24 +60,19 @@ export default {
         })
       }
 
-      api.post('/login', JSON.stringify({'userID': userId.value, 'userPW': userPw.value}), {
+      api.post('/user/signin/', JSON.stringify({'username': userId.value, 'password': userPw.value}), {
         headers: {'Content-Type': 'application/json'},
         }).then((res) => {
-          if(res.status === 200){
-            const responseBody = res.data
-            const accessToken = responseBody.accessToken
-            const refreshToken = responseBody.refreshToken
-
-            localStorage.setItem('accessToken', accessToken)
-            localStorage.setItem('refreshToken', refreshToken)
-            this.$router.push('/')
-          } else {
-            $q.dialog({
-              title: '로그인 실패',
-              message: '아이디 또는 비밀번호가 잘못되었습니다.',
-              ok: '확인'
-            })
-          }
+          console.log(res.status)
+          localStorage.setItem('token', res.data.token.toString())
+          window.location.href = '/'
+        }).catch((error) => {
+          console.log(error)
+          $q.dialog({
+            title: '로그인 실패',
+            message: '아이디 또는 비밀번호가 잘못되었습니다.',
+            ok: '확인'
+          })
         })
     }
     return {userId, userPw, login}
