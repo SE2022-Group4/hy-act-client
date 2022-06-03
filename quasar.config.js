@@ -22,6 +22,7 @@ module.exports = configure(function (/* ctx */) {
     ],
 
     extras: [
+      'material-icons',
       'mdi-v5',
     ],
 
@@ -47,6 +48,7 @@ module.exports = configure(function (/* ctx */) {
       config: {},
       plugins: [
         'Dialog'
+        'Notify',
       ]
     },
 
