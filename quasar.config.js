@@ -22,6 +22,7 @@ module.exports = configure(function (/* ctx */) {
     ],
 
     extras: [
+      'material-icons',
       'mdi-v5',
     ],
 
@@ -45,7 +46,10 @@ module.exports = configure(function (/* ctx */) {
 
     framework: {
       config: {},
-      plugins: []
+      plugins: [
+        'Dialog'
+        'Notify',
+      ]
     },
 
     animations: [],
