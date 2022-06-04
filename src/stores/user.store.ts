@@ -14,7 +14,8 @@ export const useUserStore = defineStore({
   }, success: true} as UserState),
   actions: {
     fetchUser() {
-      api.get('/user/info').then(res => {
+      api.get('/user/info', {headers: {'Authorization': `Token ${localStorage.getItem('token')}`}}).then(res => {
+        console.log(res.data);
         this.user = res.data;
       }).catch((error) => {
         console.log(error);
