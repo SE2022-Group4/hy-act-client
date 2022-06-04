@@ -1,7 +1,13 @@
 export interface UserItem {
   username: string;
   email: string;
-  groups: string[];
+  firstname: string;
+  lastname: string;
+  groups: UserGroup[];
   telephone: string;
   departments: string[];
+}
+
+interface UserGroup {
+  name: string;
 }
