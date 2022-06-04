@@ -10,7 +10,7 @@
         <q-item v-if="group === '학생'">마일리지 확인 및 사용</q-item>
         <q-item v-if="group === '학생'">비교과 프로그램 신청</q-item>
         <q-item v-if="group === '상점 관리자'">마일리지 사용 처리</q-item>
-        <q-item v-if="group === '관리자'">비교과 프로그램 출석 관리</q-item>
+        <q-item v-if="group === '관리자'">비교과 프로그램 생성/수정</q-item>
         <q-item v-if="group === '선생님'">비교과 프로그램 출석 관리</q-item>
       </q-list>
 
@@ -134,7 +134,7 @@ export default defineComponent({
       user.value = userStore.user
       if (user.value.groups.filter(group => group.name === 'student').length > 0) {
         group.value = '학생'
-      } else if (user.value.groups.filter(group => group.name === 'teacher').length > 0) {
+      } else if (user.value.groups.filter(group => group.name === 'lecturer').length > 0) {
         group.value = '선생님'
       } else if (user.value.groups.filter(group => group.name === 'admin').length > 0) {
         group.value = '관리자'
