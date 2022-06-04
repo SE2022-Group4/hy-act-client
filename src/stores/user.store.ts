@@ -10,7 +10,7 @@ export type UserState = {
 export const useUserStore = defineStore({
   id: 'userStore',
   state: () => ({user: {
-    name: '', email: '', grade: 0, group: '', major: '', mileage: 0, reserved_programs: [],
+    username: '', email: '', groups: [], telephone: '', departments: [],
   }, success: true} as UserState),
   actions: {
     fetchUser() {
@@ -26,10 +26,10 @@ export const useUserStore = defineStore({
     async logout() {
       await api.post('/logout');
       this.user = {
-        name: '', email: '', grade: 0, group: '', major: '', mileage: 0, reserved_programs: [],
+        username: '', email: '', groups: [], telephone: '', departments: [],
       } as UserItem;
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('accessToken');
+      localStorage.removeItem('token');
+      window.location.href = '/login';
     }
   }
 })

@@ -1,11 +1,7 @@
-import {ProgramItem} from 'src/models/program.item';
-
 export interface UserItem {
-  name: string;
+  username: string;
   email: string;
-  group: string;
-  grade: number;
-  major: string;
-  mileage: number;
-  reserved_programs: ProgramItem[];
+  groups: string[];
+  telephone: string;
+  departments: string[];
 }
