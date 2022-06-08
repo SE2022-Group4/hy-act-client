@@ -218,13 +218,29 @@
 </template>
 
 <script>
-import { useQuasar } from 'quasar';
 import {ref} from 'vue';
-import {api} from "../boot/axios";
+import {api} from '../boot/axios';
+import {useUserStore} from '../stores/user.store';
+import {useQuasar} from 'quasar';
 
 export default {
   name: 'CreateProgramPage',
   setup() {
+    const $q = useQuasar()
+    const userStore = useUserStore();
+    userStore.$subscribe(() => {
+      console.log(userStore.user);
+      if(userStore.user.groups.filter(group => group.name === 'admin').length === 0) {
+        $q.dialog({
+          title: '오류',
+          message: '관리자 권한이 필요합니다.',
+          ok: true,
+        }).onOk(() => {
+          window.location.href = '/';
+        });
+      }
+    });
+
     const groups = ['무관', '재학생', '졸업생', '교직원'];
     const grades = ['무관', '1학년', '2학년', '3학년', '4학년 이상'];
     const genders = ['무관', '남성', '여성'];
@@ -275,7 +291,6 @@ export default {
       { name: '실용음악학과' },
     ]
 
-    const $q = useQuasar();
     const name = ref('');
     const group = ref([]);
     const grade = ref([]);
@@ -467,7 +482,7 @@ export default {
           mileage: mileage.value
         };
 
-        api.post("/program", JSON.stringify(data)).then(
+        api.post('/program', JSON.stringify(data)).then(
           () => {
             $q.notify({
               color: 'green-5',
