@@ -108,6 +108,7 @@
           rounded
           color="grey-9"
           label="&nbsp;&nbsp;신청하기&nbsp;&nbsp;"
+          @click="apply"
         ></q-btn>
       </div>
       <q-btn flat label="닫기" color="primary" v-close-popup></q-btn>
@@ -129,6 +130,7 @@
 
 <script>
 import { defineComponent } from 'vue';
+import {api} from 'boot/axios';
 
 export default defineComponent({
   name: 'ProgramApplyDialog',
@@ -150,6 +152,10 @@ export default defineComponent({
     return {
       startDate,
       endDate,
+      apply: async function () {
+        const response = await api.post(`/programs/${props.program.id}/apply`, {headers: {'Authorization': `Token ${localStorage.getItem('token')}`}})
+        console.log(response.data)
+      },
     };
   },
 });
