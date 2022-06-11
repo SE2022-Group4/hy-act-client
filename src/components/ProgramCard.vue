@@ -5,7 +5,6 @@
         <div class="text-h6 col-11" style="text-align: center">
           {{program.title}}
         </div>
-        <q-btn icon="mdi-magnify" style="background-color: #343a40; color: #E2E6EA" @click="infoDialogOpen"/>
       </div>
     </q-card-section>
     <q-separator />
