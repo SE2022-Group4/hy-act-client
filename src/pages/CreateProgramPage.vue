@@ -6,7 +6,7 @@
       </div>
       <q-form @submit="onSubmit" @reset="onReset" class="col-12">
         <div class="row">
-          <q-uploader class="full-width" url="http://localhost:4444/upload" color="teal" filled accept=".jpg, image/*"/>
+          <q-uploader class="full-width" color="teal" filled accept=".jpg, image/*"/>
         </div>
         <div class="row" style="margin-top: 20px">
           <div class="text-h6 text-weight-bold col-4 q-mt-xs q-pr-xs q-mb-md" style="text-align: center">
