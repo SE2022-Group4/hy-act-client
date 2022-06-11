@@ -1,6 +1,7 @@
 export interface ProgramItem {
   id: number;
   name: string;
+  category: number;
   description: string;
   apply_start_at: number;
   apply_end_at: number;
