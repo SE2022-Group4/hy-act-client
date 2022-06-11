@@ -7,11 +7,11 @@
     </q-card-section>
 
     <q-separator color="gray" size="2px" inset></q-separator>
-    <q-card-section style="padding: 0px; max-height: 65vh" class="scroll">
+    <q-card-section style="padding: 0; max-height: 65vh" class="scroll">
       <div class="row">
         <!--Program Image-->
         <div class="col-6">
-          <q-img :src="url" spinner-color="white" style="max-height: 300px; max-width: 350px"></q-img>
+          <q-img :src="program.thumbnail_url" spinner-color="white" style="max-height: 300px; max-width: 350px"></q-img>
         </div>
         <!-- Program Info -->
         <div class="col-6">
@@ -31,7 +31,7 @@
               line-height: 25px;
             "><strong>장소</strong></div>
           <p style="text-align: center; line-height: 15px">
-            {{ program.place }}
+            {{ program.location }}
           </p>
         </div>
       </div>
@@ -53,21 +53,15 @@
             <strong>신청자 정보</strong>
           </div>
           <p style="padding-top: 12px; line-height: 15px">
-            <strong>이름 &nbsp;&nbsp; : &nbsp;&nbsp; </strong> 하냥이
+            <strong>이름 &nbsp;&nbsp; : &nbsp;&nbsp; </strong> {{ user.real_name }}
           </p>
           <p style="line-height: 15px">
             <strong>학과 &nbsp;&nbsp; : &nbsp;&nbsp; </strong>
-            소프트웨어학부
-          </p>
-          <p style="line-height: 15px">
-            <strong>신분 &nbsp;&nbsp; : &nbsp;&nbsp; </strong> 재학생
-          </p>
-          <p style="line-height: 15px">
-            <strong>학년 &nbsp;&nbsp; : &nbsp;&nbsp; </strong> 4학년
+            {{ user.majors[0].name }}
           </p>
           <p style="line-height: 15px">
             <strong>전화번호 &nbsp;&nbsp; : &nbsp;&nbsp; </strong>
-            010-1234-5678
+            {{ user.telephone }}
           </p>
         </div>
         <q-separator
@@ -134,27 +128,28 @@
 </style>
 
 <script>
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'ProgramApplyDialog',
   props: {
+    user: {
+      type: Object,
+      required: true,
+    },
     program: {
       type: Object,
       required: true,
     },
   },
   setup(props) {
-    const url = ref('src/assets/plagiarism.png');
     const zero = num => num < 10 && num >= 0 ? '0' + num : num;
     const koreanDate = date => `${date.getFullYear()}년 ${zero(date.getMonth() + 1)}월 ${zero(date.getDate())}일 ${zero(date.getHours())}:${zero(date.getMinutes())}`;
-    const startDate = koreanDate(props.program.start_date);
-    const endDate = koreanDate(props.program.end_date);
+    const startDate = koreanDate(new Date(props.program.program_start_at * 1000));
+    const endDate = koreanDate(new Date(props.program.program_end_at * 1000));
     return {
-      props,
       startDate,
       endDate,
-      url,
     };
   },
 });
