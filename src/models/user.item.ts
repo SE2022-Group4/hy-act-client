@@ -3,6 +3,7 @@ export interface UserItem {
   email: string;
   real_name: string;
   groups: UserGroup[];
+  majors: UserGroup[];
   telephone: string;
   departments: string[];
 }
