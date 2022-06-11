@@ -3,7 +3,7 @@
     <q-card-section>
       <div class="row">
         <div class="text-h6 col-11" style="text-align: center">
-          {{program.title}}
+          {{program.name}}
         </div>
       </div>
     </q-card-section>
@@ -72,10 +72,7 @@ export default {
     function dialogOpen() {
       emit('dialog-open', props.program);
     }
-    function infoDialogOpen() {
-      emit('info-open', props.program);
-    }
-    return {sexDict, applyDate, targetDate, dialogOpen, infoDialogOpen}
+    return {sexDict, applyDate, targetDate, dialogOpen}
   }
 }
 </script>
