@@ -10,37 +10,16 @@
     </q-toolbar>
     <q-toolbar>
       <div class="row full-width">
-        <div class="col-2 items-center">모집 학과</div>
-        <div class="col-2">
+        <div class="col-6 items-center">모집 분야</div>
+        <div class="col-6">
           <q-select
             dense
-            label="학과 선택"
+            label="분야 선택"
             label-color="white"
             dark
-            v-model="searchTargetMajor"
+            v-model="searchTargetCategory"
+            :options="categoryList.map(category => category.name)"
             dropdown-icon="mdi-menu-down"/>
-        </div>
-        <div class="col-2 items-center">모집 성별</div>
-        <div class="col-2">
-          <q-select
-            dense
-            label="성별 선택"
-            label-color="white"
-            dark
-            v-model="searchTargetGender"
-            :options="targetGenderList"
-            dropdown-icon="mdi-menu-down"/>
-        </div>
-        <div class="col-2 items-center">모집 학년</div>
-        <div class="col-2">
-          <q-select
-            dense
-            label="학년 선택"
-            dark
-            v-model="searchTargetGrade"
-            :options="targetGradeList"
-            dropdown-icon="mdi-menu-down"
-          />
         </div>
       </div>
     </q-toolbar>
@@ -48,6 +27,7 @@
   <q-page class="column items-center justify-start" style="margin-left: 10px; margin-right: 10px; margin-top: 10px">
     <ProgramCard
       v-for="item in programItemList"
+      v-show="searchTargetCategory === '' || item.category === categoryList.filter(category => category.name === searchTargetCategory)[0].id"
       :program="item" style="margin-bottom: 10px"
       @dialog-open="openDialog"
     />
@@ -73,6 +53,7 @@ import ProgramApplyDialog from 'components/ProgramApplyDialog.vue';
 import {useQuasar} from 'quasar';
 import {ProgramItem} from 'src/models/program.item';
 import {useUserStore} from 'stores/user.store';
+import {useProgramCategoryStore} from 'stores/program.category.store';
 
 export default defineComponent({
   name: 'IndexPage',
@@ -83,8 +64,6 @@ export default defineComponent({
 
     const programStore = useProgramStore();
     programStore.fetchProgramList();
-    const targetGenderList = ['전체', '남성', '여성']
-    const targetGradeList = ['전체', '1학년', '2학년', '3학년', '4학년 이상'];
     const dialogOpened = ref(false);
     const programItem = ref({});
 
@@ -99,6 +78,14 @@ export default defineComponent({
       programItemList.value = programStore.programList
     })
 
+    const programCategoryListStore = useProgramCategoryStore();
+    programCategoryListStore.fetchProgramCategoryList();
+    const categoryList = ref(programCategoryListStore.categoryList);
+    programCategoryListStore.$subscribe(() => {
+      categoryList.value = programCategoryListStore.categoryList
+    })
+
+    const searchTargetCategory = ref('');
     function openDialog (program: ProgramItem) {
       if(program.max_applicant_count > 0 && program.max_applicant_count <= program.recent_applicant_count) {
         $q.dialog({
@@ -129,8 +116,8 @@ export default defineComponent({
       dialogOpened,
       openDialog,
       programItemList,
-      targetGenderList,
-      targetGradeList,
+      searchTargetCategory,
+      categoryList,
       searchKeyword: ref(''),
       searchTargetMajor: ref('전체'),
       searchTargetGender: ref('전체'),
