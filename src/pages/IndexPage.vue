@@ -18,7 +18,6 @@
             label-color="white"
             dark
             v-model="searchTargetMajor"
-            :options="targetMajorList"
             dropdown-icon="mdi-menu-down"/>
         </div>
         <div class="col-2 items-center">모집 성별</div>
@@ -48,26 +47,16 @@
   </q-header>
   <q-page class="column items-center justify-start" style="margin-left: 10px; margin-right: 10px; margin-top: 10px">
     <ProgramCard
-      v-for="programItem in programItemList"
-      v-show="programItem.title.includes(searchKeyword) &&
-              (programItem.target_grade.includes(searchTargetGrade[0]) || searchTargetGrade === '전체') &&
-              (programItem.target_gender.includes(searchTargetGender) || searchTargetGender === '전체') &&
-              (programItem.target_major.includes(searchTargetMajor) || searchTargetMajor === '전체')"
-      :program="programItem" style="margin-bottom: 10px"
+      v-for="item in programItemList"
+      :program="item" style="margin-bottom: 10px"
       @dialog-open="openDialog"
-      @info-open="openInfoDialog"
     />
     <div>
       <q-dialog v-model="dialogOpened" class="full-width">
-        <ProgramApplyDialog :program="programItem"/>
+        <ProgramApplyDialog :program="programItem" :user="user"/>
       </q-dialog>
     </div>
   </q-page>
-  <div>
-    <q-dialog v-model="infoDialogOpened" class="full-width">
-      <ProgramInfoDialog :program="programItem"/>
-    </q-dialog>
-  </div>
 </template>
 <style scoped>
 div .items-center {
@@ -80,40 +69,66 @@ div .items-center {
 import {defineComponent, ref} from 'vue';
 import ProgramCard from 'components/ProgramCard.vue';
 import {useProgramStore} from 'stores/program.store';
-import ProgramInfoDialog from 'components/ProgramInfoDialog.vue';
 import ProgramApplyDialog from 'components/ProgramApplyDialog.vue';
+import {useQuasar} from 'quasar';
+import {ProgramItem} from 'src/models/program.item';
+import {useUserStore} from 'stores/user.store';
 
 export default defineComponent({
   name: 'IndexPage',
-  components: { ProgramInfoDialog, ProgramCard, ProgramApplyDialog },
+  components: { ProgramCard, ProgramApplyDialog },
   inheritAttrs: false,
   setup () {
+    const $q = useQuasar();
+
     const programStore = useProgramStore();
     programStore.fetchProgramList();
-    const targetMajorList = Array.from(new Set(programStore.programList.map(item => item.target_major))).filter(item => item !== '전체').sort();
-    targetMajorList.unshift('전체')
     const targetGenderList = ['전체', '남성', '여성']
     const targetGradeList = ['전체', '1학년', '2학년', '3학년', '4학년 이상'];
     const dialogOpened = ref(false);
-    const infoDialogOpened = ref(false);
     const programItem = ref({});
-    function openDialog (program: object) {
+
+    const userStore = useUserStore();
+    const user = ref(userStore.user);
+    userStore.$subscribe(() => {
+      user.value = userStore.user;
+    });
+
+    const programItemList = ref(programStore.programList);
+    programStore.$subscribe(() => {
+      programItemList.value = programStore.programList
+    })
+
+    function openDialog (program: ProgramItem) {
+      if(program.max_applicant_count > 0 && program.max_applicant_count <= program.recent_applicant_count) {
+        $q.dialog({
+          title: '신청 제한',
+          message: '제한 인원을 초과하였습니다.',
+          color: 'negative'
+        })
+        return
+      }
+
+      // const now = new Date();
+      // if(now.getTime() < program.apply_start_at || now.getTime() > program.apply_end_at) {
+      //   $q.dialog({
+      //     title: '신청 제한',
+      //     message: '신청 기간이 아닙니다.',
+      //     color: 'negative'
+      //   })
+      //   return
+      // }
+
       dialogOpened.value = true;
       programItem.value = program;
     }
 
-    function openInfoDialog (program: object) {
-      infoDialogOpened.value = true;
-      programItem.value = program;
-    }
     return {
+      user,
       programItem,
-      openDialog,
       dialogOpened,
-      openInfoDialog,
-      infoDialogOpened,
-      programItemList: programStore.programList,
-      targetMajorList,
+      openDialog,
+      programItemList,
       targetGenderList,
       targetGradeList,
       searchKeyword: ref(''),
