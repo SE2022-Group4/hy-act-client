@@ -2,7 +2,7 @@
   <q-header elevated style="background-color: #343a40">
     <q-toolbar>
       <q-toolbar-title>비교과 프로그램 신청</q-toolbar-title>
-      <q-input v-model="searchKeyword" dense color="white">
+      <q-input v-model="searchKeyword" dense  standout="bg-teal text-white" color="white" style="color: white">
         <template v-slot:prepend>
           <q-icon name="mdi-magnify" color="white" />
         </template>
@@ -27,7 +27,7 @@
   <q-page class="column items-center justify-start" style="margin-left: 10px; margin-right: 10px; margin-top: 10px">
     <ProgramCard
       v-for="item in programItemList"
-      v-show="searchTargetCategory === '' || item.category === categoryList.filter(category => category.name === searchTargetCategory)[0].id"
+      v-show="(searchTargetCategory === '' || item.category === categoryList.filter(category => category.name === searchTargetCategory)[0].id) && (searchKeyword === '' || item.name.includes(searchKeyword))"
       :program="item" style="margin-bottom: 10px"
       @dialog-open="openDialog"
     />
