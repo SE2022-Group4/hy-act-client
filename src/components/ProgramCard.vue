@@ -16,7 +16,7 @@
         <q-list>
           <q-item>
             <q-item-section class="col-4" style="font-weight: bold">모집 학년</q-item-section>
-            <q-item-section class="col-8">{{program.target_grade !== '전체' ? `${program.target_grade}학년` : program.target_grade}}</q-item-section>
+            <q-item-section class="col-8">{{program.target_grade !== "0" ? `${program.target_grade}학년` : '전체'}}</q-item-section>
           </q-item>
           <q-item>
             <q-item-section class="col-4" style="font-weight: bold">모집 성별</q-item-section>
