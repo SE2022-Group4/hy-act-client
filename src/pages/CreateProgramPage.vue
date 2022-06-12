@@ -144,6 +144,14 @@
           강사/주관기관 정보 등록
         </div>
         <div class="row">
+          <div class="text-h6 text-weight-bold col-4 vertical-middle q-pr-xs q-mb-md q-mt-sm" style="text-align: center">
+            주관 기관
+          </div>
+          <div class="col-8">
+            <q-select dense outlined label="기관" v-model="department" :options="departmentList.map(item => item.name)"/>
+          </div>
+        </div>
+        <div class="row">
           <q-btn
             class="col-12"
             padding="xs 100px"
@@ -164,6 +172,7 @@ import {api} from '../boot/axios';
 import {useUserStore} from '../stores/user.store';
 import {useQuasar} from 'quasar';
 import {useProgramCategoryStore} from '../stores/program.category.store';
+import {useProgramDepartmentStore} from '../stores/department.store';
 
 export default {
   name: 'CreateProgramPage',
@@ -211,12 +220,20 @@ export default {
       categoryList.value = categoryStore.categoryList;
     });
 
+    const departmentStore = useProgramDepartmentStore();
+    departmentStore.fetchDepartmentList();
+    const departmentList = ref([]);
+    departmentStore.$subscribe(() => {
+      departmentList.value = departmentStore.departmentList;
+    });
+    const genders = ['전체', '남성', '여성']
+
     return {
       title, description, location, applyStartDate, applyStartTime, applyEndDate, applyEndTime,
       programStartDate, programStartTime, programEndDate, programEndTime, thumbnailURL, targetGrade, targetGender,
-      category, department, maxApplicantCount, categoryList,
+      category, department, maxApplicantCount, categoryList, departmentList,
       grades: ['전체', '1학년', '2학년', '3학년', '4학년 이상'],
-      genders: ['전체', '남성', '여성'],
+      genders,
       onSubmit() {
         if(title.value.trim().length === 0){
           $q.notify({
@@ -255,7 +272,33 @@ export default {
           })
         }
         else {
-
+          const data = {
+            title: title.value,
+            description: description.value,
+            location: location.value,
+            apply_start_at: new Date(`${applyStartDate.value} ${applyStartTime.value}`).getTime(),
+            apply_end_at: new Date(`${applyEndDate.value} ${applyEndTime.value}`).getTime(),
+            program_start_at: new Date(`${programStartDate.value} ${programStartTime.value}`).getTime(),
+            program_end_at: new Date(`${programEndDate.value} ${programEndTime.value}`).getTime(),
+            thumbnail_url: thumbnailURL.value,
+            target_grade: parseInt(targetGrade.value.replace('학년', '').replace('전체', '0')),
+            max_applicant_count: maxApplicantCount.value,
+            recent_applicant_count: 0,
+            sex: genders.indexOf(targetGender.value),
+            department: departmentList.value.filter(item => item.name === department.value)[0].id,
+            category: categoryList.value.filter(item => item.name === category.value)[0].id,
+          };
+          console.log(data);
+          api.post('/programs/', JSON.stringify(data), {headers: {'Authorization': `Token ${localStorage.getItem('token')}`}}).then(
+            () => {
+              $q.notify({
+                color: 'green-5',
+                textColor: 'white',
+                icon: 'check',
+                message: '새로운 프로그램을 생성했습니다.',
+              })
+            }
+          )
         }
       },
       onReset() {
