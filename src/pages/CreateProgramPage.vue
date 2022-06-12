@@ -273,13 +273,13 @@ export default {
         }
         else {
           const data = {
-            title: title.value,
+            name: title.value,
             description: description.value,
             location: location.value,
-            apply_start_at: new Date(`${applyStartDate.value} ${applyStartTime.value}`).getTime(),
-            apply_end_at: new Date(`${applyEndDate.value} ${applyEndTime.value}`).getTime(),
-            program_start_at: new Date(`${programStartDate.value} ${programStartTime.value}`).getTime(),
-            program_end_at: new Date(`${programEndDate.value} ${programEndTime.value}`).getTime(),
+            apply_start_at: new Date(`${applyStartDate.value} ${applyStartTime.value}`).getTime() / 1000,
+            apply_end_at: new Date(`${applyEndDate.value} ${applyEndTime.value}`).getTime() / 1000,
+            program_start_at: new Date(`${programStartDate.value} ${programStartTime.value}`).getTime() / 1000,
+            program_end_at: new Date(`${programEndDate.value} ${programEndTime.value}`).getTime() / 1000,
             thumbnail_url: thumbnailURL.value,
             target_grade: parseInt(targetGrade.value.replace('학년', '').replace('전체', '0')),
             max_applicant_count: maxApplicantCount.value,
@@ -288,8 +288,8 @@ export default {
             department: departmentList.value.filter(item => item.name === department.value)[0].id,
             category: categoryList.value.filter(item => item.name === category.value)[0].id,
           };
-          console.log(data);
-          api.post('/programs/', JSON.stringify(data), {headers: {'Authorization': `Token ${localStorage.getItem('token')}`}}).then(
+          console.log(JSON.stringify(data));
+          api.post('/programs/', JSON.stringify(data), {headers: {'Authorization': `Token ${localStorage.getItem('token')}`, 'Content-Type': 'application/json'}}).then(
             () => {
               $q.notify({
                 color: 'green-5',
