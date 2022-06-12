@@ -88,6 +88,14 @@
         </div>
         <div class="row">
           <div class="text-h6 text-weight-bold col-4 vertical-middle q-pr-xs q-mb-md q-mt-sm" style="text-align: center">
+            프로그램 분야
+          </div>
+          <div class="col-8">
+            <q-select dense outlined label="분야" v-model="category" :options="categoryList.map(item => item.name)"/>
+          </div>
+        </div>
+        <div class="row">
+          <div class="text-h6 text-weight-bold col-4 vertical-middle q-pr-xs q-mb-md q-mt-sm" style="text-align: center">
             시작 일시
           </div>
           <div class="col-4">
@@ -155,6 +163,7 @@ import {ref} from 'vue';
 import {api} from '../boot/axios';
 import {useUserStore} from '../stores/user.store';
 import {useQuasar} from 'quasar';
+import {useProgramCategoryStore} from '../stores/program.category.store';
 
 export default {
   name: 'CreateProgramPage',
@@ -195,10 +204,17 @@ export default {
     const department = ref('');
     const maxApplicantCount = ref(0);
 
+    const categoryStore = useProgramCategoryStore();
+    categoryStore.fetchProgramCategoryList();
+    const categoryList = ref([]);
+    categoryStore.$subscribe(() => {
+      categoryList.value = categoryStore.categoryList;
+    });
+
     return {
       title, description, location, applyStartDate, applyStartTime, applyEndDate, applyEndTime,
       programStartDate, programStartTime, programEndDate, programEndTime, thumbnailURL, targetGrade, targetGender,
-      category, department, maxApplicantCount,
+      category, department, maxApplicantCount, categoryList,
       grades: ['전체', '1학년', '2학년', '3학년', '4학년 이상'],
       genders: ['전체', '남성', '여성'],
       onSubmit() {
