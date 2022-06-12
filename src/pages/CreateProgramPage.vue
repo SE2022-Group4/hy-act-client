@@ -213,6 +213,13 @@ export default {
     const department = ref('');
     const maxApplicantCount = ref(0);
 
+    const thumbnailURLList = [
+      'http://jjal.today/data/file/gallery/1028612757_dJDo9pBV_2bd774f01a7f254ec0c907978f95f52ea1f05ce4.jpg',
+      'https://image.newsis.com/2021/07/26/NISI20210726_0000795204_web.jpg?rnd=20210726113530',
+      'https://img.etnews.com/news/article/2019/05/31/cms_temp_article_31142124414587.jpg'
+    ];
+    thumbnailURL.value = thumbnailURLList[Math.floor(Math.random() * thumbnailURLList.length)]
+
     const categoryStore = useProgramCategoryStore();
     categoryStore.fetchProgramCategoryList();
     const categoryList = ref([]);
@@ -283,7 +290,6 @@ export default {
             thumbnail_url: thumbnailURL.value,
             target_grade: parseInt(targetGrade.value.replace('학년', '').replace('전체', '0')),
             max_applicant_count: maxApplicantCount.value,
-            recent_applicant_count: 0,
             sex: genders.indexOf(targetGender.value),
             department: departmentList.value.filter(item => item.name === department.value)[0].id,
             category: categoryList.value.filter(item => item.name === category.value)[0].id,
