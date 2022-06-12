@@ -153,7 +153,7 @@ export default defineComponent({
       startDate,
       endDate,
       apply: async function () {
-        const response = await api.post(`/programs/${props.program.id}/apply`, {headers: {'Authorization': `Token ${localStorage.getItem('token')}`}})
+        const response = await api.post(`/programs/${props.program.id}/apply/`, {headers: {'Authorization': `Token ${localStorage.getItem('token')}`}})
         console.log(response.data)
       },
     };
