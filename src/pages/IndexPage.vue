@@ -37,6 +37,11 @@
       </q-dialog>
     </div>
   </q-page>
+  <div>
+    <q-dialog v-model="infoDialogOpened" class="full-width">
+      <ProgramInfoDialog :program="programItem"/>
+    </q-dialog>
+  </div>
 </template>
 <style scoped>
 div .items-center {
