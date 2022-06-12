@@ -131,6 +131,7 @@
 <script>
 import { defineComponent } from 'vue';
 import {api} from 'boot/axios';
+import {useQuasar} from 'quasar';
 
 export default defineComponent({
   name: 'ProgramApplyDialog',
@@ -144,18 +145,35 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props) {
+  emits: ['close'],
+  setup(props, {emit}) {
+    const $q = useQuasar();
+
     const zero = num => num < 10 && num >= 0 ? '0' + num : num;
     const koreanDate = date => `${date.getFullYear()}년 ${zero(date.getMonth() + 1)}월 ${zero(date.getDate())}일 ${zero(date.getHours())}:${zero(date.getMinutes())}`;
     const startDate = koreanDate(new Date(props.program.program_start_at * 1000));
     const endDate = koreanDate(new Date(props.program.program_end_at * 1000));
+    async function apply () {
+      const response = await api.post(`/programs/${props.program.id}/apply/`, {},{headers: {'Authorization': `Token ${localStorage.getItem('token')}`}})
+      if(response.status === 200) {
+        $q.notify({
+          color: 'green-5',
+          textColor: 'white',
+          message: '정상적으로 신청되었습니다.',
+        });
+        emit('close');
+      } else {
+        $q.notify({
+          color: 'red-5',
+          textColor: 'white',
+          message: '신청에 실패하였습니다.',
+        });
+      }
+    }
     return {
       startDate,
       endDate,
-      apply: async function () {
-        const response = await api.post(`/programs/${props.program.id}/apply/`, {headers: {'Authorization': `Token ${localStorage.getItem('token')}`}})
-        console.log(response.data)
-      },
+      apply,
     };
   },
 });

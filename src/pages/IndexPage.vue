@@ -33,7 +33,7 @@
     />
     <div>
       <q-dialog v-model="dialogOpened" class="full-width">
-        <ProgramApplyDialog :program="programItem" :user="user"/>
+        <ProgramApplyDialog :program="programItem" :user="user" @close="closeDialog"/>
       </q-dialog>
     </div>
   </q-page>
@@ -110,11 +110,17 @@ export default defineComponent({
       programItem.value = program;
     }
 
+    function closeDialog () {
+      dialogOpened.value = false;
+      programStore.fetchProgramList()
+    }
+
     return {
       user,
       programItem,
       dialogOpened,
       openDialog,
+      closeDialog,
       programItemList,
       searchTargetCategory,
       categoryList,
