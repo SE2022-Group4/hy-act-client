@@ -101,7 +101,7 @@
     </q-card-section>
     <q-separator inset></q-separator>
     <q-card-actions align="right">
-      <div class="row" style="padding: 0px">
+      <div class="row" style="padding: 0">
         <q-btn
           class="items-center"
           unelevated
@@ -148,7 +148,6 @@ export default defineComponent({
   emits: ['close'],
   setup(props, {emit}) {
     const $q = useQuasar();
-
     const zero = num => num < 10 && num >= 0 ? '0' + num : num;
     const koreanDate = date => `${date.getFullYear()}년 ${zero(date.getMonth() + 1)}월 ${zero(date.getDate())}일 ${zero(date.getHours())}:${zero(date.getMinutes())}`;
     const startDate = koreanDate(new Date(props.program.program_start_at * 1000));
