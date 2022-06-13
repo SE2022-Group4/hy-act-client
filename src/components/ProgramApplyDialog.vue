@@ -153,21 +153,42 @@ export default defineComponent({
     const startDate = koreanDate(new Date(props.program.program_start_at * 1000));
     const endDate = koreanDate(new Date(props.program.program_end_at * 1000));
     async function apply () {
-      const response = await api.post(`/programs/${props.program.id}/apply/`, {},{headers: {'Authorization': `Token ${localStorage.getItem('token')}`}})
-      if(response.status === 200) {
-        $q.notify({
-          color: 'green-5',
-          textColor: 'white',
-          message: '정상적으로 신청되었습니다.',
-        });
-        emit('close');
-      } else {
-        $q.notify({
-          color: 'red-5',
-          textColor: 'white',
-          message: '신청에 실패하였습니다.',
-        });
-      }
+      api.post(`/programs/${props.program.id}/apply/`, {},{headers: {'Authorization': `Token ${localStorage.getItem('token')}`}}).then(
+        res => {
+          if(res.status === 200) {
+            $q.notify({
+              color: 'green-5',
+              textColor: 'white',
+              message: '정상적으로 신청되었습니다.',
+            });
+            emit('close');
+          }
+        },
+        err => {
+          if(err.response.status === 400) {
+            $q.dialog({
+              title: '신청 실패',
+              message: '이미 신청한 프로그램입니다.',
+              color: 'negative',
+              buttons: [
+                {
+                  label: '확인',
+                  color: 'negative',
+                  handler: () => {
+                    emit('close');
+                  },
+                },
+              ],
+            });
+          } else {
+            $q.notify({
+              color: 'red-5',
+              textColor: 'white',
+              message: '신청에 실패하였습니다.',
+            });
+          }
+        }
+      )
     }
     return {
       startDate,
