@@ -58,7 +58,7 @@
                   color="grey-8"
                   text-color="white"
                   size="1.4rem"
-                  @click="disableStartButton"
+                  @click="clickStartButton"
                   >발급하기
                 </q-btn>
                 <div
@@ -66,7 +66,7 @@
                   style="text-align: center; font-size: 2.5rem"
                   v-else
                 >
-                  <strong>786432</strong>
+                  <strong>{{startAttendanceCode}}</strong>
                 </div>
               </div>
 
@@ -77,7 +77,7 @@
                 발급하면 자동으로 시작시간이 기록됩니다.
               </p>
               <p style="text-align: center; padding-top: 2rem" v-else>
-                3월 2일 08:31 시작시간이 기록되었습니다.
+                {{ koreanDate(new Date()) }} 시작 시간이 기록되었습니다.
               </p>
             </q-card-section>
           </q-card>
@@ -97,7 +97,7 @@
                   color="grey-8"
                   text-color="white"
                   size="1.4rem"
-                  @click="disableEndButton"
+                  @click="clickEndButton"
                   >발급하기
                 </q-btn>
                 <div
@@ -105,7 +105,7 @@
                   style="text-align: center; font-size: 2.5rem"
                   v-else
                 >
-                  <strong>786432</strong>
+                  <strong>{{ endAttendanceCode }}</strong>
                 </div>
               </div>
               <p
@@ -115,7 +115,7 @@
                 발급하면 자동으로 종료시간이 기록됩니다.
               </p>
               <p style="text-align: center; padding-top: 2rem" v-else>
-                3월 2일 08:31 시작시간이 기록되었습니다.
+                {{ koreanDate(new Date()) }} 종료 시간이 기록되었습니다.
               </p>
             </q-card-section>
           </q-card>
@@ -187,7 +187,8 @@ import { defineComponent, ref } from 'vue';
 import {useUserStore} from '../stores/user.store';
 import {useQuasar} from 'quasar';
 import {useProgramStore} from '../stores/program.store';
-import {useRoute} from "vue-router";
+import {useRoute} from 'vue-router';
+import {api} from '../boot/axios';
 
 export default defineComponent({
   name: 'IndexPage',
@@ -306,16 +307,24 @@ export default defineComponent({
     });
 
     let start_not_exist = ref(true);
-    const disableStartButton = () => {
+    const startAttendanceCode = ref(0);
+    function clickStartButton() {
       if (start_not_exist.value) {
-        start_not_exist.value = false;
+        api.post(`/programs/${route.params.program_id}/attendance/code/create/`, {'type': 0}, {headers: {'Authorization': `Token ${localStorage.getItem('token')}`}}).then(res => {
+          startAttendanceCode.value = res.data.code;
+          start_not_exist.value = false;
+        });
       }
-    };
+    }
 
     let end_not_exist = ref(true);
-    const disableEndButton = () => {
+    const endAttendanceCode = ref(0);
+    const clickEndButton = () => {
       if (end_not_exist.value) {
-        end_not_exist.value = false;
+        api.post(`/programs/${route.params.program_id}/attendance/code/create/`, {'type': 1}, {headers: {'Authorization': `Token ${localStorage.getItem('token')}`}}).then(res => {
+          endAttendanceCode.value = res.data.code;
+          end_not_exist.value = false;
+        });
       }
     };
 
@@ -328,15 +337,18 @@ export default defineComponent({
 
     return {
       program,
+      koreanDate,
       targetDate,
       rows,
       columns,
       pagination: ref({
         rowsPerPage: 0,
       }),
-      disableStartButton,
+      clickStartButton,
+      startAttendanceCode,
       start_not_exist,
-      disableEndButton,
+      endAttendanceCode,
+      clickEndButton,
       end_not_exist,
       refreshButton,
       refresh,
