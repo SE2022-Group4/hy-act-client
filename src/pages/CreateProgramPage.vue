@@ -173,6 +173,7 @@ import {useUserStore} from '../stores/user.store';
 import {useQuasar} from 'quasar';
 import {useProgramCategoryStore} from '../stores/program.category.store';
 import {useProgramDepartmentStore} from '../stores/department.store';
+import {useLecturerStore} from "../stores/lecturer.store";
 
 export default {
   name: 'CreateProgramPage',
@@ -234,6 +235,14 @@ export default {
       departmentList.value = departmentStore.departmentList;
     });
     const genders = ['전체', '남성', '여성']
+
+    const lecturerStore = useLecturerStore()
+    const lectureList = ref(lecturerStore.lecturerList)
+    lecturerStore.fetchLectureList()
+    lecturerStore.$subscribe(() => {
+      console.log(lecturerStore.lecturerList)
+      lectureList.value = lecturerStore.lecturerList
+    })
 
     return {
       title, description, location, applyStartDate, applyStartTime, applyEndDate, applyEndTime,
