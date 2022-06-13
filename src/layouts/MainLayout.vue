@@ -46,7 +46,7 @@
         <q-item class="items-center">
           <q-avatar size="56px" icon="mdi-account" style="background-color: #E2E6EA"/>
         </q-item>
-        <q-item class="text-weight-bold items-center" style="color: #91979b" >{{user.lastname}}{{user.firstname}} {{group}}</q-item>
+        <q-item class="text-weight-bold items-center" style="color: #91979b" >{{user.real_name}} {{group}}</q-item>
         <q-item class="items-center">{{user.email}}</q-item>
       </q-list>
 
@@ -120,7 +120,7 @@
 <script lang="ts">
 import {defineComponent, ref} from 'vue';
 import {useUserStore} from 'stores/user.store';
-import {useMyProgramListStore} from "stores/my.program.list.store";
+import {useMyProgramListStore} from 'stores/my.program.list.store';
 
 export default defineComponent({
   name: 'MainLayout',
