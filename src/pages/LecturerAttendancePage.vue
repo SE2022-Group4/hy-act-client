@@ -14,24 +14,23 @@
               <div class="column" style="font-size: 1.2rem">
                 <div class="col" style="padding: 0.5rem">
                   <div class="row">
-                    <div class="col-2" style="te">강의명</div>
+                    <div class="col-2">강의명</div>
                     <div class="col-10">
-                      대학원생 역량강화 프로그램 " 전문성 기반의 자기다움
-                      경력개발 전략"
+                      {{program.name}}
                     </div>
                   </div>
                 </div>
                 <div class="col" style="padding: 0.5rem">
                   <div class="row">
                     <div class="col-2">강사</div>
-                    <div class="col-10">나똑똑</div>
+                    <div class="col-10">{{ program.lecturer }}</div>
                   </div>
                 </div>
                 <div class="col" style="padding: 0.5rem">
                   <div class="row">
                     <div class="col-2">시간</div>
                     <div class="col-10">
-                      2022.03.02(수) 08:30 ~ 2022.06.21(화) 17:30
+                      {{ targetDate }}
                     </div>
                   </div>
                 </div>
@@ -187,6 +186,8 @@
 import { defineComponent, ref } from 'vue';
 import {useUserStore} from '../stores/user.store';
 import {useQuasar} from 'quasar';
+import {useProgramStore} from '../stores/program.store';
+import {useRoute} from "vue-router";
 
 export default defineComponent({
   name: 'IndexPage',
@@ -204,6 +205,19 @@ export default defineComponent({
           window.location.href = '/';
         });
       }
+    });
+
+    const programStore = useProgramStore();
+    const program = ref(programStore.program);
+    const route = useRoute();
+    const zero = num => num < 10 && num >= 0 ? '0' + num : num;
+    const koreanDate = date => `${date.getFullYear()}년 ${zero(date.getMonth() + 1)}월 ${zero(date.getDate())}일 ${zero(date.getHours())}:${zero(date.getMinutes())}`;
+    const targetDate = ref('')
+
+    programStore.fetchProgram(route.params.program_id.toString());
+    programStore.$subscribe(() => {
+      program.value = programStore.program;
+      targetDate.value = `${koreanDate(new Date(programStore.program.program_start_at * 1000))} ~ ${koreanDate(new Date(programStore.program.program_end_at * 1000))}`
     });
 
     const columns = [
@@ -313,6 +327,8 @@ export default defineComponent({
     };
 
     return {
+      program,
+      targetDate,
       rows,
       columns,
       pagination: ref({
