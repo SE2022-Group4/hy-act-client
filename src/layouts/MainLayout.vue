@@ -52,7 +52,7 @@
 
 
       <q-list v-if="group==='학생'">
-        <q-item class="items-center">
+        <q-item class="items-center" to="/program/my">
           <div class="col-8">예약한 프로그램</div>
           <div class="col-4" style="text-align: end">{{myPrograms}} 건</div>
         </q-item>
@@ -60,11 +60,7 @@
           <div class="col-8">마일리지</div>
           <div class="col-4" style="text-align: end">0 포인트</div>
         </q-item>
-        <q-item>
-          <div class="col-11" style="display: flex; align-items: center">예약 관리</div>
-          <q-icon class="col-1" size="20px" name="mdi-open-in-new"></q-icon>
-        </q-item>
-        <q-item>
+        <q-item href="https://portal.hanyang.ac.kr">
           <div class="col-11" style="display: flex; align-items: center">한양대학교 포털</div>
           <q-icon class="col-1" size="20px" name="mdi-open-in-new"></q-icon>
         </q-item>
@@ -155,12 +151,17 @@ export default defineComponent({
       userStore.logout()
     }
 
+    function openPortal(){
+      window.location.href = 'www.hanyang.ac.kr'
+    }
+
     return {
       user,
       group,
       logout,
       languageListOpened,
       myPrograms,
+      openPortal,
       openLanguageList() {
         languageListOpened.value = !languageListOpened.value
       }
