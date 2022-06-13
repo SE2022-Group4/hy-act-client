@@ -12,6 +12,7 @@ export const useProgramStore = defineStore({
   actions: {
     async fetchProgramList() {
       const response = await api.get('/programs', {headers: {'Authorization': `Token ${localStorage.getItem('token')}`}})
+      console.log(response.data)
       this.programList = response.data;
     }
   }
