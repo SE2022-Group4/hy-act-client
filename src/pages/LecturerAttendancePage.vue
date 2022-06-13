@@ -185,11 +185,27 @@
 
 <script>
 import { defineComponent, ref } from 'vue';
+import {useUserStore} from '../stores/user.store';
+import {useQuasar} from 'quasar';
 
 export default defineComponent({
   name: 'IndexPage',
 
   setup() {
+    const $q = useQuasar();
+    const userStore = useUserStore();
+    userStore.$subscribe(() => {
+      if(userStore.user.groups.filter(group => group.name === 'lecturer').length === 0) {
+        $q.dialog({
+          title: '오류',
+          message: '관리자 권한이 필요합니다.',
+          ok: true,
+        }).onOk(() => {
+          window.location.href = '/';
+        });
+      }
+    });
+
     const columns = [
       {
         name: 'index',
