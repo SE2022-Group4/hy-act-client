@@ -8,6 +8,7 @@
     <MyProgramCard
       v-for="item in programItemList"
       :program="item" style="margin-bottom: 10px"
+      @cancel-program="cancelProgram"
     />
   </q-page>
 </template>
@@ -23,6 +24,7 @@ import {defineComponent, ref} from 'vue';
 import {useUserStore} from 'stores/user.store';
 import {useMyProgramListStore} from 'stores/my.program.list.store';
 import MyProgramCard from 'components/MyProgramCard.vue';
+import {ProgramItem} from "src/models/program.item";
 
 export default defineComponent({
   name: 'MyProgramPage',
@@ -45,11 +47,16 @@ export default defineComponent({
       programItemList.value = programStore.programList
     })
 
+    function cancelProgram() {
+      programStore.fetchMyProgramList();
+    }
+
     return {
       user,
       programItem,
       dialogOpened,
       programItemList,
+      cancelProgram
     };
   }
 });

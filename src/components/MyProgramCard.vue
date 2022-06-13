@@ -40,7 +40,7 @@
           </q-item>
           <q-item>
             <q-item-section class="col-6">
-              <q-btn rounded style="background-color: #5B5D60; color: white; padding: 15px" @click="cancelProgram">
+              <q-btn rounded style="background-color: red; color: white; padding: 15px" @click="cancelProgram">
                 취소하기
               </q-btn>
             </q-item-section>
@@ -57,7 +57,8 @@
 </template>
 
 <script>
-import {useRouter} from "vue-router";
+
+import {api} from 'boot/axios';
 
 export default {
   name: 'MyProgramCard',
@@ -74,7 +75,9 @@ export default {
     const targetDate = `${koreanDate(new Date(props.program.program_start_at * 1000))} ~ ${koreanDate(new Date(props.program.program_end_at * 1000))}`
     const applyDate = `${koreanDate(new Date(props.program.apply_start_at * 1000))} ~ ${koreanDate(new Date(props.program.apply_end_at * 1000))}`
     function cancelProgram() {
-      emit('cancelProgram', props.program);
+      api.delete(`/programs/${props.program.id}`, {headers: {'Authorization': `Token ${localStorage.getItem('token')}`}}).then(() => {
+        emit('cancel-program');
+      });
     }
     function goToAttendancePage() {
       window.location.href = `/program/${props.program.id}/attendance`;
