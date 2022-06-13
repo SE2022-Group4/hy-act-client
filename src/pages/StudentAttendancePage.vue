@@ -58,7 +58,7 @@
                 프로그램이 시작되면 인증번호를 제출해주세요.
               </p>
               <p style="text-align: center; padding-top: 2rem" v-else>
-                4월 27일(수) 14:00 참여시작이 인증되었습니다.
+                {{koreanDate(new Date())}} 참여시작이 인증되었습니다.
               </p>
             </q-card-section>
           </q-card>
@@ -93,7 +93,7 @@
                 프로그램이 종료되면 인증번호를 제출해주세요.
               </p>
               <p style="text-align: center; padding-top: 2rem" v-else>
-                4월 27일(수) 14:00 참여종료가 인증되었습니다.
+                {{koreanDate(new Date())}} 참여 종료가 인증되었습니다.
               </p>
             </q-card-section>
           </q-card>
@@ -145,6 +145,8 @@ export default defineComponent({
     const program = ref(programStore.program);
     const route = useRoute();
     const currentState = ref('');
+    const zero = num => num < 10 && num >= 0 ? '0' + num : num;
+    const koreanDate = date => `${date.getFullYear()}년 ${zero(date.getMonth() + 1)}월 ${zero(date.getDate())}일 ${zero(date.getHours())}:${zero(date.getMinutes())}`;
 
     programStore.fetchProgram(route.params.program_id.toString());
     programStore.$subscribe(() => {
@@ -162,6 +164,7 @@ export default defineComponent({
     return {
       program,
       currentState,
+      koreanDate,
       ph1,
       ph2,
       check_url,
