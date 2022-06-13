@@ -156,21 +156,21 @@
                   <q-avatar v-if="col.name == 'start'" size="20px">
                     <img
                       v-if="props.row.start == true"
-                      src="src/assets/greencheck.png"
+                      src="/src/assets/greencheck.png"
                     />
                     <img
                       v-if="props.row.start == false"
-                      src="src/assets/red_x.png"
+                      src="/src/assets/red_x.png"
                     />
                   </q-avatar>
                   <q-avatar v-if="col.name == 'end'" size="20px">
                     <img
                       v-if="props.row.end == true"
-                      src="src/assets/greencheck.png"
+                      src="/src/assets/greencheck.png"
                     />
                     <img
                       v-if="props.row.end == false"
-                      src="src/assets/red_x.png"
+                      src="/src/assets/red_x.png"
                     />
                   </q-avatar>
                 </q-td>
