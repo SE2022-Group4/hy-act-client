@@ -19,7 +19,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('src/pages/CreateProgramPage.vue'),
       },
       {
-        path: 'program/:program_id/attendance',
+        path: 'program/:program_id/attendance/manage',
         component: () => import('src/pages/LecturerAttendancePage.vue'),
       }
     ],
