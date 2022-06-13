@@ -54,7 +54,7 @@
       <q-list v-if="group==='학생'">
         <q-item class="items-center">
           <div class="col-8">예약한 프로그램</div>
-          <div class="col-4" style="text-align: end">건</div>
+          <div class="col-4" style="text-align: end">{{myPrograms}} 건</div>
         </q-item>
         <q-item class="items-center">
           <div class="col-8">마일리지</div>
@@ -120,6 +120,7 @@
 <script lang="ts">
 import {defineComponent, ref} from 'vue';
 import {useUserStore} from 'stores/user.store';
+import {useMyProgramListStore} from "stores/my.program.list.store";
 
 export default defineComponent({
   name: 'MainLayout',
@@ -143,6 +144,12 @@ export default defineComponent({
       }
     })
 
+    const myPrograms = ref(0)
+    const myProgramStore = useMyProgramListStore()
+    myProgramStore.fetchMyProgramList()
+    myProgramStore.$subscribe(() => {
+      myPrograms.value = myProgramStore.programList.length
+    })
 
     function logout() {
       userStore.logout()
@@ -153,6 +160,7 @@ export default defineComponent({
       group,
       logout,
       languageListOpened,
+      myPrograms,
       openLanguageList() {
         languageListOpened.value = !languageListOpened.value
       }
