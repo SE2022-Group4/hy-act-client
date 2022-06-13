@@ -107,29 +107,38 @@
 import { defineComponent, ref } from 'vue';
 import {useRoute} from 'vue-router';
 import {useProgramStore} from 'stores/program.store';
+import {api} from "boot/axios";
 
 export default defineComponent({
   name: 'IndexPage',
 
   setup() {
-    const check_url = ref('src/assets/greencheck.png');
-    var ph1 = ref('');
-    var ph2 = ref('');
-    var start_not_validated = ref(true);
+    const check_url = ref('/src/assets/greencheck.png');
+    const ph1 = ref('');
+    const ph2 = ref('');
+    const start_not_validated = ref(true);
+    const router = useRoute();
     const startValidateCode = () => {
-      if (ph1.value == String(1234)) {
-        start_not_validated.value = false;
-      } else {
-      }
+      api.post(`/programs/${router.params.program_id}/attendance/code/verify/`, {'type': 0, 'code': ph1.value}, {headers: {'Authorization': `Token ${localStorage.getItem('token')}`}}).then(
+        () => {
+          start_not_validated.value = false;
+        }).catch(
+          () => {
+            alert('잘못된 코드입니다.');
+          }
+      )
     };
 
-    var end_not_validated = ref(true);
-
+    const end_not_validated = ref(true);
     const endValidateCode = () => {
-      if (ph2.value == String(4321)) {
-        end_not_validated.value = false;
-      } else {
-      }
+      api.post(`/programs/${router.params.program_id}/attendance/code/verify/`, {'type': 1, 'code': ph2.value}, {headers: {'Authorization': `Token ${localStorage.getItem('token')}`}}).then(
+        () => {
+          end_not_validated.value = false;
+        }).catch(
+        () => {
+          alert('잘못된 코드입니다.');
+        }
+      )
     };
 
     const programStore = useProgramStore();
