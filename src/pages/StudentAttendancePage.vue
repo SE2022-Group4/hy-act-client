@@ -1,0 +1,144 @@
+<template>
+  <q-page style="padding: 1rem">
+    <div class="text-h6" style="padding-bottom: 1rem">
+      비교과 프로그램 출석 확인
+    </div>
+
+    <q-separator color="gray" size="2px" inset></q-separator>
+
+    <div class="column">
+      <div class="col" style="text-align: center; padding: 1rem">
+        <div class="row justify-around">
+          <q-card style="width: 95%">
+            <q-card-section>
+              <p style="padding-top: 0.8rem; font-size: 1.1rem">현재</p>
+              <div class="text-h6" style="padding-bottom: 1.5rem">
+                <strong>"SPSS 기초(통계분석)" <br /> </strong>
+              </div>
+              <p style="font-size: 1.1rem">
+                비교과 과목을 수강중입니다.<br />
+                진행자가 공지한 번호를 확인해 주세요.
+              </p>
+            </q-card-section>
+          </q-card>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="row justify-around" style="padding: 1rem">
+          <q-card style="width: 45%">
+            <q-card-section>
+              <div
+                class="text-h6"
+                style="text-align: center; padding-bottom: 1rem"
+              >
+                <strong> 참여 시작 인증 번호 </strong>
+              </div>
+              <div class="row justify-around" v-if="start_not_validated">
+                <div class="col-7">
+                  <q-input outlined v-model="ph1" label="시작인증코드" />
+                </div>
+                <div class="col-3">
+                  <q-btn push size="21px" @click="startValidateCode"
+                    >제출</q-btn
+                  >
+                </div>
+              </div>
+              <div class="row justify-around" v-else>
+                <q-img
+                  :src="check_url"
+                  spinner-color="white"
+                  style="height: 6rem; width: 6rem"
+                ></q-img>
+              </div>
+              <p
+                style="text-align: center; padding-top: 2rem"
+                v-if="start_not_validated"
+              >
+                프로그램이 시작되면 인증번호를 제출해주세요.
+              </p>
+              <p style="text-align: center; padding-top: 2rem" v-else>
+                4월 27일(수) 14:00 참여시작이 인증되었습니다.
+              </p>
+            </q-card-section>
+          </q-card>
+
+          <q-card style="width: 45%">
+            <q-card-section>
+              <div
+                class="text-h6"
+                style="text-align: center; padding-bottom: 1rem"
+              >
+                <strong> 참여 종료 인증 번호 </strong>
+              </div>
+              <div class="row justify-around" v-if="end_not_validated">
+                <div class="col-7">
+                  <q-input outlined v-model="ph2" label="종료인증코드" />
+                </div>
+                <div class="col-3">
+                  <q-btn push size="21px" @click="endValidateCode">제출</q-btn>
+                </div>
+              </div>
+              <div class="row justify-around" v-else>
+                <q-img
+                  :src="check_url"
+                  spinner-color="white"
+                  style="height: 6rem; width: 6rem"
+                ></q-img>
+              </div>
+              <p
+                style="text-align: center; padding-top: 2rem"
+                v-if="end_not_validated"
+              >
+                프로그램이 종료되면 인증번호를 제출해주세요.
+              </p>
+              <p style="text-align: center; padding-top: 2rem" v-else>
+                4월 27일(수) 14:00 참여종료가 인증되었습니다.
+              </p>
+            </q-card-section>
+          </q-card>
+        </div>
+      </div>
+    </div>
+  </q-page>
+</template>
+
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
+
+export default defineComponent({
+  name: 'IndexPage',
+
+  setup() {
+    const check_url = ref('src/assets/greencheck.png');
+    var ph1 = ref('');
+    var ph2 = ref('');
+    var start_not_validated = ref(true);
+    const startValidateCode = () => {
+      if (ph1.value == String(1234)) {
+        start_not_validated.value = false;
+      } else {
+      }
+    };
+
+    var end_not_validated = ref(true);
+
+    const endValidateCode = () => {
+      if (ph2.value == String(4321)) {
+        end_not_validated.value = false;
+      } else {
+      }
+    };
+
+    return {
+      ph1,
+      ph2,
+      check_url,
+      startValidateCode,
+      start_not_validated,
+      endValidateCode,
+      end_not_validated,
+    };
+  },
+});
+</script>
