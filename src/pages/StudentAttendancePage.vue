@@ -13,10 +13,10 @@
             <q-card-section>
               <p style="padding-top: 0.8rem; font-size: 1.1rem">현재</p>
               <div class="text-h6" style="padding-bottom: 1.5rem">
-                <strong>"SPSS 기초(통계분석)" <br /> </strong>
+                <strong>"{{program.name}}" <br /> </strong>
               </div>
               <p style="font-size: 1.1rem">
-                비교과 과목을 수강중입니다.<br />
+                {{currentState}}.<br />
                 진행자가 공지한 번호를 확인해 주세요.
               </p>
             </q-card-section>
@@ -103,8 +103,10 @@
   </q-page>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent, ref } from 'vue';
+import {useRoute} from 'vue-router';
+import {useProgramStore} from 'stores/program.store';
 
 export default defineComponent({
   name: 'IndexPage',
@@ -130,7 +132,27 @@ export default defineComponent({
       }
     };
 
+    const programStore = useProgramStore();
+    const program = ref(programStore.program);
+    const route = useRoute();
+    const currentState = ref('');
+
+    programStore.fetchProgram(route.params.program_id.toString());
+    programStore.$subscribe(() => {
+      program.value = programStore.program;
+      const now = new Date();
+      if(now.getTime() < programStore.program.program_start_at){
+        currentState.value = '프로그램 시작 전입니다';
+      } else if(now.getTime() > programStore.program.program_end_at){
+        currentState.value = '프로그램 종료 전입니다';
+      } else {
+        currentState.value = '프로그램 종료 후 입니다';
+      }
+    });
+
     return {
+      program,
+      currentState,
       ph1,
       ph2,
       check_url,
