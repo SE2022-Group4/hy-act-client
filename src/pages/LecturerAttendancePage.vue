@@ -139,7 +139,7 @@
           <q-table
             style="height: 700px; width: 95%"
             title="참여자 출석 현황"
-            :rows="rows"
+            :rows="attendanceState"
             :columns="columns"
             row-key="index"
             virtual-scroll
@@ -149,28 +149,16 @@
             <template v-slot:body="props">
               <q-tr :props="props">
                 <q-td v-for="col in props.cols" :key="col.name" :props="props">
-                  <span v-if="col.name != 'start' && col.name != 'end'">
+                  <span v-if="col.name !== 'start' && col.name !== 'end'">
                     {{ col.value }}</span
                   >
-                  <q-avatar v-if="col.name == 'start'" size="20px">
-                    <img
-                      v-if="props.row.start == true"
-                      src="/src/assets/greencheck.png"
-                    />
-                    <img
-                      v-if="props.row.start == false"
-                      src="/src/assets/red_x.png"
-                    />
+                  <q-avatar v-if="col.name === 'start'" size="20px">
+                    <img v-if="col.value === true" src="/src/assets/greencheck.png"/>
+                    <img v-if="col.value === false" src="/src/assets/red_x.png"/>
                   </q-avatar>
-                  <q-avatar v-if="col.name == 'end'" size="20px">
-                    <img
-                      v-if="props.row.end == true"
-                      src="/src/assets/greencheck.png"
-                    />
-                    <img
-                      v-if="props.row.end == false"
-                      src="/src/assets/red_x.png"
-                    />
+                  <q-avatar v-if="col.name === 'end'" size="20px">
+                    <img v-if="col.value === true" src="/src/assets/greencheck.png"/>
+                    <img v-if="col.value === false" src="/src/assets/red_x.png"/>
                   </q-avatar>
                 </q-td>
               </q-tr>
@@ -189,7 +177,7 @@ import {useQuasar} from 'quasar';
 import {useProgramStore} from '../stores/program.store';
 import {useRoute} from 'vue-router';
 import {api} from '../boot/axios';
-import {useAttendanceStore} from "../stores/attendance.store";
+import {useAttendanceStore} from '../stores/attendance.store';
 
 export default defineComponent({
   name: 'IndexPage',
@@ -227,93 +215,40 @@ export default defineComponent({
     attendanceStore.fetchAttendance(route.params.program_id.toString());
     attendanceStore.$subscribe(() => {
       attendanceState.value = attendanceStore.attendance.applications;
-      console.log(attendanceStore.attendance.applications);
+      console.log(attendanceState.value[0]);
     });
 
     const columns = [
       {
-        name: 'index',
-        label: '#',
-        field: 'index',
-      },
-      {
         name: 'name',
         required: true,
         label: '이름',
-        align: 'left',
-        field: (row) => row.name,
-        format: (val) => `${val}`,
-        sortable: true,
-      },
-      {
-        name: 'identity',
         align: 'center',
-        label: '신분',
-        field: 'identity',
-        sortable: true,
+        field: row => row.student.username,
       },
       {
-        name: 'department',
-        label: '학과',
-        field: 'department',
-        sortable: true,
+        name: 'major',
+        required: true,
+        label: '전공',
+        align: 'center',
+        field: row => row.student.majors[0].name,
       },
-      { name: 'grade', label: '학년', field: 'grade' },
-      { name: 'start', label: '시작 인증', field: 'start', align: 'center' },
-      { name: 'end', label: '종료 인증', field: 'end', align: 'center' },
-    ];
+      {
+        name: 'start',
+        required: true,
+        label: '출석 시작',
+        align: 'center',
+        field: row => row.attendance_start_at !== null,
+      },
+      {
+        name: 'end',
+        required: true,
+        label: '출석 종료',
+        align: 'center',
+        field: row => row.attendance_end_at !== null,
+      },
+    ]
 
-    const seed = [
-      {
-        name: '하냥이',
-        identity: '재학생',
-        department: '소프트웨어학부',
-        grade: 4,
-        start: false,
-        end: false,
-      },
-      {
-        name: '삼색이',
-        identity: '재학생',
-        department: 'ICT융합학부',
-        grade: 4,
-        start: true,
-        end: false,
-      },
-      {
-        name: '길막이',
-        identity: '재학생',
-        department: '기계공학과',
-        grade: 3,
-        start: true,
-        end: true,
-      },
-      {
-        name: '연님이',
-        identity: '휴학생',
-        department: '재료화학공학과',
-        grade: 4,
-        start: false,
-        end: true,
-      },
-      {
-        name: '야롱이',
-        identity: '재학생',
-        department: '응용물리학과',
-        grade: 3,
-        start: true,
-        end: true,
-      },
-    ];
-
-    let rows = [];
-    for (let i = 0; i < 2; i++) {
-      rows = rows.concat(seed.slice(0).map((r) => ({ ...r })));
-    }
-
-    rows.forEach((row, index) => {
-      row.index = index;
-    });
 
     let start_not_exist = ref(true);
     const startAttendanceCode = ref(0);
@@ -339,16 +274,14 @@ export default defineComponent({
 
     let refresh = ref(true);
     const refreshButton = () => {
-      if (refresh.value) {
-        refresh.value = false;
-      }
+      attendanceStore.fetchAttendance(route.params.program_id.toString());
     };
 
     return {
       program,
       koreanDate,
       targetDate,
-      rows,
+      attendanceState,
       columns,
       pagination: ref({
         rowsPerPage: 0,
