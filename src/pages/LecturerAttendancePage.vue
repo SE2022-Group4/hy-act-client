@@ -189,6 +189,7 @@ import {useQuasar} from 'quasar';
 import {useProgramStore} from '../stores/program.store';
 import {useRoute} from 'vue-router';
 import {api} from '../boot/axios';
+import {useAttendanceStore} from "../stores/attendance.store";
 
 export default defineComponent({
   name: 'IndexPage',
@@ -219,6 +220,14 @@ export default defineComponent({
     programStore.$subscribe(() => {
       program.value = programStore.program;
       targetDate.value = `${koreanDate(new Date(programStore.program.program_start_at * 1000))} ~ ${koreanDate(new Date(programStore.program.program_end_at * 1000))}`
+    });
+
+    const attendanceStore = useAttendanceStore();
+    const attendanceState = ref(attendanceStore.attendance.applications);
+    attendanceStore.fetchAttendance(route.params.program_id.toString());
+    attendanceStore.$subscribe(() => {
+      attendanceState.value = attendanceStore.attendance.applications;
+      console.log(attendanceStore.attendance.applications);
     });
 
     const columns = [
