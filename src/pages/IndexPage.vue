@@ -76,6 +76,9 @@ export default defineComponent({
     const user = ref(userStore.user);
     userStore.$subscribe(() => {
       user.value = userStore.user;
+      if (user.value.groups.filter(group => group.name === 'lecturer').length > 0) {
+        window.location.href = '/lecturer';
+      }
     });
 
     const programItemList = ref(programStore.programList);
