@@ -6,6 +6,4 @@ COPY . .
 
 FROM develop-stage as deploy-stage
 RUN yarn
-RUN quasar build
-
-CMD ["quasar", "serve", "--history;"]
+CMD ["quasar", "dev"]
