@@ -75,7 +75,7 @@ export default {
     const targetDate = `${koreanDate(new Date(props.program.program_start_at * 1000))} ~ ${koreanDate(new Date(props.program.program_end_at * 1000))}`
     const applyDate = `${koreanDate(new Date(props.program.apply_start_at * 1000))} ~ ${koreanDate(new Date(props.program.apply_end_at * 1000))}`
     function cancelProgram() {
-      api.delete(`/programs/${props.program.id}`, {headers: {'Authorization': `Token ${localStorage.getItem('token')}`}}).then(() => {
+      api.post(`/programs/${props.program.id}/cancel/`, {}, {headers: {'Authorization': `Token ${localStorage.getItem('token')}`}}).then(() => {
         emit('cancel-program');
       });
     }
