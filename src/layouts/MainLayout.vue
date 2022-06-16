@@ -126,22 +126,24 @@ export default defineComponent({
     userStore.fetchUser()
     const group = ref('')
     const user = ref(userStore.user)
+    const myPrograms = ref(0)
+    const myProgramStore = useMyProgramListStore()
     userStore.$subscribe(() => {
       user.value = userStore.user
       if (user.value.groups.filter(group => group.name === 'student').length > 0) {
+        myProgramStore.fetchMyProgramListLecturer()
         group.value = '학생'
       } else if (user.value.groups.filter(group => group.name === 'lecturer').length > 0) {
+        myProgramStore.fetchMyProgramListLecturer()
         group.value = '선생님'
       } else if (user.value.groups.filter(group => group.name === 'admin').length > 0) {
+        myProgramStore.fetchMyProgramListAdmin()
         group.value = '관리자'
       } else {
         group.value = '상점 관리자'
       }
     })
 
-    const myPrograms = ref(0)
-    const myProgramStore = useMyProgramListStore()
-    myProgramStore.fetchMyProgramList()
     myProgramStore.$subscribe(() => {
       myPrograms.value = myProgramStore.programList.length
     })

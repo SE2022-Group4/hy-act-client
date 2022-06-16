@@ -31,8 +31,6 @@ export default defineComponent({
   components: { MyProgramCard },
   inheritAttrs: false,
   setup () {
-    const programStore = useMyProgramListStore();
-    programStore.fetchMyProgramList();
     const dialogOpened = ref(false);
     const programItem = ref({});
 
@@ -42,13 +40,21 @@ export default defineComponent({
       user.value = userStore.user;
     });
 
+    const programStore = useMyProgramListStore();
+    if(user.value.groups.filter(item => item.name === 'admin').length !== 0) {
+      programStore.fetchMyProgramListAdmin();
+    } else if(user.value.groups.filter(item => item.name === 'lecturer').length !== 0) {
+      programStore.fetchMyProgramListLecturer();
+    } else {
+      programStore.fetchMyProgramListStudent();
+    }
     const programItemList = ref(programStore.programList);
     programStore.$subscribe(() => {
       programItemList.value = programStore.programList
     })
 
     function cancelProgram() {
-      programStore.fetchMyProgramList();
+      programStore.fetchMyProgramListStudent();
     }
 
     return {
