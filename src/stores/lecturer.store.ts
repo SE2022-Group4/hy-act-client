@@ -11,9 +11,8 @@ export const useLecturerStore = defineStore({
   id: 'lecturerStore',
   state: () => ({lecturerList: []} as LecturerStore),
   actions: {
-    async fetchLectureList() {
-      const response = await api.get('/programs/lecturer', {headers: {'Authorization': `Token ${localStorage.getItem('token')}`}})
-      console.log(response.data)
+    async fetchLectureList(search: string) {
+      const response = await api.get(`/programs/lecturer?name=${search}`, {headers: {'Authorization': `Token ${localStorage.getItem('token')}`}})
       this.lecturerList = response.data;
     }
   }
