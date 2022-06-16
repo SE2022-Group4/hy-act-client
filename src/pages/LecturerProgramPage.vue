@@ -1,7 +1,7 @@
 <template>
   <q-header elevated style="background-color: #343a40">
     <q-toolbar>
-      <q-toolbar-title>비교과 프로그램 신청 목록</q-toolbar-title>
+      <q-toolbar-title>비교과 프로그램 출석 관리</q-toolbar-title>
     </q-toolbar>
   </q-header>
   <q-page class="column items-center justify-start" style="margin-left: 10px; margin-right: 10px; margin-top: 10px">
