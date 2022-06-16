@@ -1,7 +1,10 @@
+import {UserItem} from "src/models/user.item";
+
 export interface ProgramItem {
   id: number;
   name: string;
   category: number;
+  lecturer: UserItem;
   description: string;
   apply_start_at: number;
   apply_end_at: number;

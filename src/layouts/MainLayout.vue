@@ -4,14 +4,13 @@
       <!-- 네비게이션 링크 -->
       <q-list>
         <q-item-label header>한양대학교 비교과 플랫폼</q-item-label>
-        <q-item v-if="group === '학생'">비교과 프로그램 신청</q-item>
-        <q-item v-if="group === '학생'">비교과 프로그램 출석 확인</q-item>
-        <q-item v-if="group === '학생'">수강 이력 및 인증서 발급</q-item>
+        <q-item v-if="group === '학생'" to="/">비교과 프로그램 신청</q-item>
+        <q-item v-if="group === '학생'" to="/program/my">비교과 프로그램 출석 확인</q-item>
+<!--        <q-item v-if="group === '학생'">수강 이력 및 인증서 발급</q-item>-->
         <q-item v-if="group === '학생'">마일리지 확인 및 사용</q-item>
-        <q-item v-if="group === '학생'">비교과 프로그램 신청</q-item>
         <q-item v-if="group === '상점 관리자'">마일리지 사용 처리</q-item>
         <q-item v-if="group === '관리자'" to="/program/create">비교과 프로그램 생성/수정</q-item>
-        <q-item v-if="group === '선생님'">비교과 프로그램 출석 관리</q-item>
+        <q-item v-if="group === '선생님'" to="/lecturer">비교과 프로그램 출석 관리</q-item>
       </q-list>
 
       <div class="fixed-bottom">
@@ -52,7 +51,7 @@
 
 
       <q-list v-if="group==='학생'">
-        <q-item class="items-center">
+        <q-item class="items-center" to="/program/my">
           <div class="col-8">예약한 프로그램</div>
           <div class="col-4" style="text-align: end">{{myPrograms}} 건</div>
         </q-item>
@@ -60,11 +59,7 @@
           <div class="col-8">마일리지</div>
           <div class="col-4" style="text-align: end">0 포인트</div>
         </q-item>
-        <q-item>
-          <div class="col-11" style="display: flex; align-items: center">예약 관리</div>
-          <q-icon class="col-1" size="20px" name="mdi-open-in-new"></q-icon>
-        </q-item>
-        <q-item>
+        <q-item href="https://portal.hanyang.ac.kr">
           <div class="col-11" style="display: flex; align-items: center">한양대학교 포털</div>
           <q-icon class="col-1" size="20px" name="mdi-open-in-new"></q-icon>
         </q-item>
@@ -131,22 +126,24 @@ export default defineComponent({
     userStore.fetchUser()
     const group = ref('')
     const user = ref(userStore.user)
+    const myPrograms = ref(0)
+    const myProgramStore = useMyProgramListStore()
     userStore.$subscribe(() => {
       user.value = userStore.user
       if (user.value.groups.filter(group => group.name === 'student').length > 0) {
+        myProgramStore.fetchMyProgramListLecturer()
         group.value = '학생'
       } else if (user.value.groups.filter(group => group.name === 'lecturer').length > 0) {
+        myProgramStore.fetchMyProgramListLecturer()
         group.value = '선생님'
       } else if (user.value.groups.filter(group => group.name === 'admin').length > 0) {
+        myProgramStore.fetchMyProgramListAdmin()
         group.value = '관리자'
       } else {
         group.value = '상점 관리자'
       }
     })
 
-    const myPrograms = ref(0)
-    const myProgramStore = useMyProgramListStore()
-    myProgramStore.fetchMyProgramList()
     myProgramStore.$subscribe(() => {
       myPrograms.value = myProgramStore.programList.length
     })
@@ -155,12 +152,17 @@ export default defineComponent({
       userStore.logout()
     }
 
+    function openPortal(){
+      window.location.href = 'www.hanyang.ac.kr'
+    }
+
     return {
       user,
       group,
       logout,
       languageListOpened,
       myPrograms,
+      openPortal,
       openLanguageList() {
         languageListOpened.value = !languageListOpened.value
       }
