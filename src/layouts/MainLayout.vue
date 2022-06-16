@@ -9,7 +9,7 @@
 <!--        <q-item v-if="group === '학생'">수강 이력 및 인증서 발급</q-item>-->
         <q-item v-if="group === '학생'">마일리지 확인 및 사용</q-item>
         <q-item v-if="group === '상점 관리자'">마일리지 사용 처리</q-item>
-        <q-item v-if="group === '관리자'">비교과 프로그램 생성/수정</q-item>
+        <q-item v-if="group === '관리자'" to="/program/create">비교과 프로그램 생성/수정</q-item>
         <q-item v-if="group === '선생님'">비교과 프로그램 출석 관리</q-item>
       </q-list>
 

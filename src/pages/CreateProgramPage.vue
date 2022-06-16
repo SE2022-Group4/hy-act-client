@@ -152,6 +152,15 @@
           </div>
         </div>
         <div class="row">
+          <div class="text-h6 text-weight-bold col-4 vertical-middle q-pr-xs q-mb-md q-mt-sm" style="text-align: center">
+            강사 검색
+          </div>
+          <div class="col-8">
+            <q-input ref="lecturerSearchBar" dense outlined label="강사" v-model="lecturer" type="search">
+            </q-input>
+          </div>
+        </div>
+        <div class="row">
           <q-btn
             class="col-12"
             padding="xs 100px"
@@ -167,12 +176,13 @@
 </template>
 
 <script>
-import {ref} from 'vue';
+import {onMounted, ref} from 'vue';
 import {api} from '../boot/axios';
 import {useUserStore} from '../stores/user.store';
 import {useQuasar} from 'quasar';
 import {useProgramCategoryStore} from '../stores/program.category.store';
 import {useProgramDepartmentStore} from '../stores/department.store';
+import {useLecturerStore} from "../stores/lecturer.store";
 
 export default {
   name: 'CreateProgramPage',
@@ -235,10 +245,30 @@ export default {
     });
     const genders = ['전체', '남성', '여성']
 
+    const lecturer = ref('');
+    const lecturerSearchBar = ref(null)
+
+    const lecturerStore = useLecturerStore()
+    const lectureList = ref(lecturerStore.lecturerList)
+    lecturerStore.$subscribe(() => {
+      lectureList.value = lecturerStore.lecturerList
+      console.log(lectureList.value)
+    })
+
+    onMounted(() => {
+      const el = lecturerSearchBar.value.getNativeElement()
+      el.addEventListener('input', (e) => {
+        lecturer.value = e.target.value;
+        if(lecturer.value.length >= 2){
+          lecturerStore.fetchLectureList(lecturer.value)
+        }
+      })
+    })
+
     return {
       title, description, location, applyStartDate, applyStartTime, applyEndDate, applyEndTime,
       programStartDate, programStartTime, programEndDate, programEndTime, thumbnailURL, targetGrade, targetGender,
-      category, department, maxApplicantCount, categoryList, departmentList,
+      category, department, maxApplicantCount, categoryList, departmentList, lecturer, lectureList, lecturerSearchBar,
       grades: ['전체', '1학년', '2학년', '3학년', '4학년 이상'],
       genders,
       onSubmit() {
