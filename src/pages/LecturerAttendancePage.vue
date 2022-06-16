@@ -23,7 +23,7 @@
                 <div class="col" style="padding: 0.5rem">
                   <div class="row">
                     <div class="col-2">강사</div>
-                    <div class="col-10">{{ program.lecturer }}</div>
+                    <div class="col-10">{{ lecturerName }}</div>
                   </div>
                 </div>
                 <div class="col" style="padding: 0.5rem">
@@ -199,6 +199,7 @@ export default defineComponent({
 
     const programStore = useProgramStore();
     const program = ref(programStore.program);
+    const lecturerName = ref('')
     const route = useRoute();
     const zero = num => num < 10 && num >= 0 ? '0' + num : num;
     const koreanDate = date => `${date.getFullYear()}년 ${zero(date.getMonth() + 1)}월 ${zero(date.getDate())}일 ${zero(date.getHours())}:${zero(date.getMinutes())}`;
@@ -207,6 +208,7 @@ export default defineComponent({
     programStore.fetchProgram(route.params.program_id.toString());
     programStore.$subscribe(() => {
       program.value = programStore.program;
+      lecturerName.value = programStore.program.lecturer.real_name;
       targetDate.value = `${koreanDate(new Date(programStore.program.program_start_at * 1000))} ~ ${koreanDate(new Date(programStore.program.program_end_at * 1000))}`
     });
 
@@ -215,7 +217,6 @@ export default defineComponent({
     attendanceStore.fetchAttendance(route.params.program_id.toString());
     attendanceStore.$subscribe(() => {
       attendanceState.value = attendanceStore.attendance.applications;
-      console.log(attendanceState.value[0]);
     });
 
     const columns = [
@@ -294,6 +295,7 @@ export default defineComponent({
       end_not_exist,
       refreshButton,
       refresh,
+      lecturerName,
     };
   },
 });

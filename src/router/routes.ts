@@ -2,6 +2,14 @@ import { RouteRecordRaw } from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
   {
+    path: '/newProgram',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('components/NewProgram.vue') },
+    ],
+  },
+
+  {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
@@ -18,6 +26,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'program/:program_id/attendance',
         component: () => import('src/pages/StudentAttendancePage.vue'),
+      },
+      {
+        path: 'lecturer',
+        component: () => import('src/pages/LecturerProgramPage.vue'),
       },
       {
         path: 'program/my',
